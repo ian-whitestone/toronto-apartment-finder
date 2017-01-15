@@ -1,0 +1,5 @@
+python-craigslist>=1.0.3
+sqlalchemy
+python-dateutil
+ipython
+slackclient

@@ -1,0 +1,6 @@
+
+##Setup
+
+pip install python-craigslist
+pip install sqlalchemy
+pip install slackclient
