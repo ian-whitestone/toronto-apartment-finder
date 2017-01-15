@@ -8,7 +8,6 @@ This repo is largely based of the work of [Vik Paruchuri](https://github.com/Vik
 
 ## Modifications
 ------------------------
-
 I have tweaked the settings so that the bot will scrape Toronto listings. A summary of other modifications is included below.
 
 
