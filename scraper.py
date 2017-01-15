@@ -9,6 +9,7 @@ from slackclient import SlackClient
 import time
 import settings
 import slacker
+import re
 
 engine = create_engine('sqlite:///listings.db', echo=False)
 
@@ -110,10 +111,25 @@ def scrape_area(area):
             session.commit()
 
             # Return the result if it has images, it's near a metro station, or if it is in an area we defined.
-            if result['has_image'] and (len(result["metro"]) > 0 or len(result["area"]) > 0):
+            if result['has_image'] and (len(result["metro"]) > 0 or len(result["area"]) > 0) and check_title(result['name']):
                 results.append(result)
 
     return results
+
+def check_title(name):
+    """
+    check the listing title to see if it's a studio or furnished
+    """
+    STUDIO = re.compile('studio',re.IGNORECASE)
+    FURNISHED = re.compile('furnished',re.IGNORECASE)
+
+    m1 = re.search(STUDIO,name)
+    m2 = re.search(FURNISHED,name)
+
+    if m1 or m2:
+        return False
+    else:
+        return True
 
 def get_posted_favourites(bot,channel_dict):
     channel_id = channel_dict['favourites']
