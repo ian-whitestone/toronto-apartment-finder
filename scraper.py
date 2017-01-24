@@ -121,10 +121,12 @@ def check_title(name):
     check the listing title to see if it's a studio or furnished
     """
     STUDIO = re.compile('studio',re.IGNORECASE)
+    BACHELOR = re.compile('bachelor',re.IGNORECASE)
     FURNISHED = re.compile('furnished',re.IGNORECASE)
 
     m1 = re.search(STUDIO,name)
     m2 = re.search(FURNISHED,name)
+    m3 = re.search(BACHELOR,name)
 
     if m1 or m2:
         return False
