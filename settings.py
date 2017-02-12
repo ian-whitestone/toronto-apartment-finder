@@ -77,10 +77,11 @@ CRAIGSLIST_HOUSING_SECTION = 'apa'
 # How long we should sleep between scrapes of Craigslist.
 # Too fast may get rate limited.
 # Too slow may miss listings.
-SLEEP_INTERVAL = 20 * 60 # 20 minutes
+SLEEP_INTERVAL = 1 * 60 # 20 minutes
 
 # Which slack channel to post the listings into.
-SLACK_CHANNEL = "#housing"
+SLACK_CHANNEL_1 = "#craigslist"
+SLACK_CHANNEL_2 = "#kijiji"
 
 # The token that allows us to connect to slack.
 # Should be put in private.py, or set as an environment variable.

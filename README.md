@@ -15,7 +15,10 @@ I have tweaked the settings so that the bot will scrape Toronto listings. A summ
 In order to keep track of units that both my girlfriend & I like, I added functionality for the slack bot two check for any posts that have received 2 'thumbs-up'. All of these posts are moved to a #favourites channel.
 
 ### Keywords
-Use regexes to determine if the unit is furnished or a studio.
+Use regexes to determine if the unit is furnished or a studio/bachelor apartment.
+
+### Kijiji
+Built a web scraper to pull relevant listings from Kijiji and post to a separate kijiji channel.
 
 ### Other Minor Changes
 * Only skip listings if they are missing *both* neighborhood & geotag information. The original repo dropped listings that were missing neighborhood information, which I felt was unnecessary due to the presence of the lat/lon coordinates in the geotag

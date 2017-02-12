@@ -10,17 +10,23 @@ import time
 import settings
 import slacker
 import re
+import kijiji
 
+
+
+## MOVE ALL THIS TO DATABASE OPERATIONS MODULE
+
+## SQL ALCHEMY OBJECTS
 engine = create_engine('sqlite:///listings.db', echo=False)
-
 Base = declarative_base()
 
-class Listing(Base):
+
+class ClListing(Base):
     """
     A table to store data on craigslist listings.
     """
 
-    __tablename__ = 'listings'
+    __tablename__ = 'craigslist'
 
     id = Column(Integer, primary_key=True)
     link = Column(String, unique=True)
@@ -35,11 +41,22 @@ class Listing(Base):
     area = Column(String)
     metro_stop = Column(String)
 
-Base.metadata.create_all(engine)
+class KjListing(Base):
+    """
+    A table to store data on kjiji listings.
+    """
 
+    __tablename__ = 'kijiji'
+
+    id = Column(String, primary_key=True)
+    link = Column(String, unique=True)
+    price = Column(String)
+    title = Column(String)
+    address = Column(String)
+
+Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
-
 
 def scrape_area(area):
     """
@@ -53,7 +70,7 @@ def scrape_area(area):
 
     results = []
 
-    gen = cl_h.get_results(sort_by='newest', geotagged=True, limit=50)
+    gen = cl_h.get_results(sort_by='newest', geotagged=True)
     neighborhoods = []
     while True:
         try:
@@ -63,17 +80,18 @@ def scrape_area(area):
             break
         except Exception:
             continue
-        listing = session.query(Listing).filter_by(cl_id=result["id"]).first()
+
+        listing = session.query(ClListing).filter_by(id=result["id"]).first()
 
         # Don't store the listing if it already exists.
         if listing is None:
-            if result["where"] is None and result["geotag"] is not None:
+            if result["where"] is None and result["geotag"] is None:
                 # If there is no string identifying which neighborhood the result is from or no geotag, skip it.
                 continue
 
             lat = 0
             lon = 0
-            if result["geotag"] is not None:
+            if result["geotag"]:
                 # Assign the coordinates.
                 lat = result["geotag"][0]
                 lon = result["geotag"][1]
@@ -82,6 +100,7 @@ def scrape_area(area):
                 geo_data = find_points_of_interest(result["geotag"])
                 result.update(geo_data)
             else:
+                print (result)
                 geo_data = match_neighbourhood(result['where'])
                 result.update(geo_data)
 
@@ -93,7 +112,7 @@ def scrape_area(area):
                 pass
 
             # Create the listing object.
-            listing = Listing(
+            listing = ClListing(
                 link=result["url"],
                 created=parse(result["datetime"]),
                 lat=lat,
@@ -101,7 +120,7 @@ def scrape_area(area):
                 name=result["name"],
                 price=price,
                 location=result["where"],
-                cl_id=result["id"],
+                id=result["id"],
                 area=result["area"],
                 metro_stop=result["metro"]
             )
@@ -133,42 +152,36 @@ def check_title(name):
     else:
         return True
 
-def get_posted_favourites(bot,channel_dict):
-    channel_id = channel_dict['favourites']
-    response = bot.channels.history(channel_id)
 
-    posted_ids = []
-    for message in response.body['messages']:
+def scrape_kijiji():
+    base_results = kijiji.find_listings()
+
+    results = []
+    for result in base_results:
         try:
-            posted_ids.append(message['text'].split('.html')[0].split('apa/')[1])
+            listing = session.query(KjListing).filter_by(id=result["id"]).first()
+
+            if listing: ## if listing is already in the db, don't append
+                continue
+
+            # Create the listing object.
+            listing = KjListing(
+                id = result['id'],
+                link = result['url'],
+                price = result['price'],
+                title = result['title'],
+                address = result['address']
+            )
+
+            # Save the listing so we don't grab it again.
+            session.add(listing)
+            session.commit()
+
+            results.append(result)
         except:
-            pass
+            print ('errored on ' % result)
+    return results
 
-    return posted_ids
-
-def post_favourites():
-    bot = slacker.Slacker(settings.SLACK_TOKEN)
-    channels_response = bot.channels.list()
-    channel_dict = {chan['name']:chan['id'] for chan in channels_response.body['channels']}
-
-    posted_ids = get_posted_favourites(bot,channel_dict)
-
-    channel_id = channel_dict['housing']
-    response = bot.channels.history(channel_id)
-
-    for message in response.body['messages']:
-        try:
-            cl_id = message['text'].split('.html')[0].split('apa/')[1]
-        except:
-            continue
-
-        reactions = message.get('reactions',None)
-        if reactions:
-            for reaction in reactions:
-                if reaction['name'] == '+1' and reaction['count'] > 1 and cl_id not in posted_ids:
-                    post_favourite(bot,message['text'])
-                    continue
-    return
 
 def do_scrape():
     """
@@ -183,8 +196,66 @@ def do_scrape():
     for area in settings.AREAS:
         all_results += scrape_area(area)
 
-    print("{}: Got {} results".format(time.ctime(), len(all_results)))
+    print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
 
     # Post each result to slack.
     for result in all_results:
-        post_listing_to_slack(sc, result)
+        post_listing_to_slack(sc, result, 'craigslist')
+
+    # Get all the results from kijiji.
+    # all_results = scrape_kijiji()
+    #
+    # print("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
+    #
+    # for result in all_results:
+    #     post_listing_to_slack(sc, result, 'kijiji')
+
+    return
+
+
+
+
+
+def get_posted_favourites(bot,channel_dict):
+    channel_id = channel_dict['favourites']
+    response = bot.channels.history(channel_id)
+
+    posted_ids = []
+    for message in response.body['messages']:
+        try:
+            if '.html' in message['text']:
+                posted_ids.append(message['text'].split('.html')[0].split('apa/')[1])
+            else:
+                posted_ids.append(message['text'].split('/')[-1])
+        except:
+            pass
+
+    return posted_ids
+
+
+def post_favourites():
+    bot = slacker.Slacker(settings.SLACK_TOKEN)
+    channels_response = bot.channels.list()
+    channel_dict = {chan['name']:chan['id'] for chan in channels_response.body['channels']}
+    posted_ids = get_posted_favourites(bot,channel_dict)
+
+    for channel in ['kijiji', 'craigslist']:
+        channel_id = channel_dict[channel]
+        response = bot.channels.history(channel_id)
+
+        for message in response.body['messages']:
+            try:
+                if channel == 'craigslist':
+                    ad_id = message['text'].split('.html')[0].split('apa/')[1]
+                elif channel == 'kijiji':
+                    ad_id = message['text'].split('/')[-1]
+            except:
+                continue
+
+            reactions = message.get('reactions',None)
+            if reactions:
+                for reaction in reactions:
+                    if reaction['name'] == '+1' and reaction['count'] > 1 and ad_id not in posted_ids:
+                        post_favourite(bot,message['text'])
+                        continue
+    return

@@ -33,3 +33,6 @@ if __name__ == "__main__":
 #add logging
 #remove furnished apartments
 #remove studios
+
+
+#put everything in SQL database for analytics down the road??

@@ -30,17 +30,29 @@ def in_box(coords, box):
         return True
     return False
 
-def post_listing_to_slack(sc, listing):
+def post_listing_to_slack(sc, listing, site):
     """
     Posts the listing to slack.
     :param sc: A slack client.
     :param listing: A record of the listing.
+    :param site: craigslist or kijiji
     """
-    desc = "{0} | {1} | {2} | {3} | <{4}>".format(listing["area"], listing["price"], listing["metro_dist"], listing["name"], listing["url"])
+    if site == 'craigslist':
+        desc = "{0} | {1} | {2} | {3} | <{4}>".format(listing["area"], listing["price"], listing["metro_dist"], listing["name"], listing["url"])
+        channel = settings.SLACK_CHANNEL_1
+    elif site == 'kijiji':
+        desc = "{0} | {1} | <{2}>".format(listing['price'], listing['title'], listing["url"])
+        channel = settings.SLACK_CHANNEL_2
+    else:
+        return
     sc.api_call(
-        "chat.postMessage", channel=settings.SLACK_CHANNEL, text=desc,
+        "chat.postMessage", channel=channel, text=desc,
         username='pybot', icon_emoji=':robot_face:'
     )
+    return
+
+
+
 
 def post_favourite(bot,text):
     bot.chat.post_message('favourites', text, username = 'pybot' , icon_emoji=':robot_face:')
