@@ -3,3 +3,4 @@ sqlalchemy
 python-dateutil
 ipython
 slackclient
+slacker
