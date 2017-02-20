@@ -31,3 +31,8 @@ Built a web scraper to pull relevant listings from Kijiji and post to a separate
 * Scrape other rental sites
 * Scrape condos.ca and compare renting vs buying at the listings level
 * Pull in listing description data and scan that as well
+
+* Score each listing
+* Add 1 line for each listing parameter (i.e. price, neighborhood), colour code by scale
+* custom walkscore ratings  
+* Add a like/dislike button, store results to create a ML pred'n tool.
