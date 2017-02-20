@@ -19,7 +19,7 @@ class ClListing(Base):
     geotag = Column(String)
     lat = Column(Float)
     lon = Column(Float)
-    name = Column(String)
+    title = Column(String)
     price = Column(Float)
     location = Column(String)
     cl_id = Column(Integer, unique=True)

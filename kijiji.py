@@ -65,8 +65,8 @@ def parse_listings(soup):
         image = None
         try:
             image_parent = listing_soup.find('li', {'class': 'showing'})
-            image = image_parent.find('img', {'itemprop': 'image'})['src']
-            print (image)
+            if image_parent:
+                image = image_parent.find('img', {'itemprop': 'image'})['src']
         except Exception as e:
             print ('error finding kijiji image. Error %s' % str(e))
 
@@ -77,7 +77,7 @@ def parse_listings(soup):
             'url': listing_url,
             'id': ad_id,
             'address': address,
-            'image': image
+            'image_url': image
         }
 
         ad_dicts.append(ad_dict)
@@ -96,7 +96,7 @@ def find_listings():
         ads = parse_listings(soup)
         listings_dicts += ads
         next_page = soup.find('a', {'title': 'Next'})
-
+        next_page = False
         while next_page:
             soup = get_soup('http://www.kijiji.ca' + next_page['href'])
             ads = parse_listings(soup)

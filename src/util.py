@@ -17,7 +17,7 @@ def coord_distance(lat1, lon1, lat2, lon2):
     a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
     c = 2 * math.asin(math.sqrt(a))
     km = 6367 * c
-    return km
+    return round(km,2)
 
 def in_box(coords, box):
     """
@@ -37,17 +37,41 @@ def post_listing_to_slack(sc, listing, site):
     :param listing: A record of the listing.
     :param site: craigslist or kijiji
     """
+
+    channel = settings.SLACK_PARAMS[site]['channel']
+    post_fields = settings.SLACK_PARAMS[site]['post_fields']
+    attachments = []
     if site == 'craigslist':
-        desc = "{0} | {1} | {2} | {3} | <{4}>".format(listing["area"], listing["price"], listing["metro_dist"], listing["name"], listing["url"])
-        channel = settings.SLACK_CHANNEL_1
+        desc = "{0} | {1} | {2} | {3} | <{4}>".format(listing["area"],
+            listing["price"], listing["metro_dist"],
+            listing["title"], listing["url"]
+        )
     elif site == 'kijiji':
         desc = "{0} | {1} | <{2}>".format(listing['price'], listing['title'], listing["url"])
-        channel = settings.SLACK_CHANNEL_2
     else:
         return
+
+    header = {
+        "fallback": desc,
+        'color': '#7CD197',
+        "title": listing.get('title',None),
+        "title_link": listing.get('url',None),
+        "thumb_url": listing.get('image_url',None)
+    }
+
+    attachments.append(header)
+
+    for key, field_desc in post_fields.items():
+        payload = {
+            'fallback': desc,
+            'color': '#7CD197',
+            'text': field_desc + str(listing.get(key,''))
+        }
+        attachments.append(payload)
+
     sc.api_call(
-        "chat.postMessage", channel=channel, text=desc,
-        username='pybot', icon_emoji=':robot_face:'
+        "chat.postMessage", channel=channel, attachments=attachments,
+        username='apartment-finder', icon_emoji=':robot_face:'
     )
     return
 

@@ -1,6 +1,6 @@
 from scraper import do_scrape
 from scraper import post_favourites
-import settings
+import src.settings
 import time
 import sys
 import traceback

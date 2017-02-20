@@ -14,8 +14,8 @@ import requests
 from requests.exceptions import RequestException
 from six import iteritems
 from six.moves import range
-
 from .sites import get_all_sites
+from .data_scraping_utils import get_html
 
 ALL_SITES = get_all_sites()  # All the Craiglist sites
 RESULTS_PER_REQUEST = 100  # Craigslist returns 100 results per request
@@ -35,6 +35,15 @@ def requests_get(*args, **kwargs):
             logger.warning('Request failed (%s). Retrying ...', exc)
         return requests.get(*args, **kwargs)
 
+def get_soup(base_url, filters):
+    url = base_url + '?'
+
+    for filter,value in filters.items():
+        url += filter + '=' + str(value) + '&'
+    url = url[:-1]
+    html = get_html(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    return soup
 
 def get_list_filters(url):
     list_filters = {}
@@ -169,18 +178,23 @@ class CraigslistBase(object):
 
         while True:
             self.filters['s'] = start
-            response = requests_get(self.url, params=self.filters,
-                                    logger=self.logger)
-            self.logger.info('GET %s', response.url)
-            self.logger.info('Response code: %s', response.status_code)
-            response.raise_for_status()  # Something failed?
 
-            soup = BeautifulSoup(response.content, 'html.parser')
+            # response = requests_get(self.url, params=self.filters,
+            #                         logger=self.logger)
+            # self.logger.info('GET %s', response.url)
+            # self.logger.info('Response code: %s', response.status_code)
+            # response.raise_for_status()  # Something failed?
+            # soup = BeautifulSoup(response.content, 'html.parser')
+
+            soup = get_soup(self.url, self.filters)
+
             if not total:
                 totalcount = soup.find('span', {'class': 'totalcount'})
                 total = int(totalcount.text) if totalcount else 0
 
-            for row in soup.find_all('p', {'class': 'result-info'}):
+            rows = soup.find_all('p', {'class': 'result-info'})
+            listings = soup.find_all('li', {'class': 'result-row'})
+            for row,listing in zip(rows,listings):
                 if limit is not None and total_so_far >= limit:
                     break
                 self.logger.debug('Processing %s of %s results ...',
@@ -204,8 +218,14 @@ class CraigslistBase(object):
                 tags_span = row.find('span', {'class': 'result-tags'})
                 tags = tags_span.text if tags_span else ''
 
+                image = listing.find('img')
+                image_url = None
+                if image:
+                    image_url = image['src']
+                    print (image_url)
+
                 result = {'id': id,
-                          'name': name,
+                          'title': name,
                           'url': url,
                           'datetime': datetime,
                           'price': price.text if price else None,
@@ -213,7 +233,8 @@ class CraigslistBase(object):
                           'has_image': 'pic' in tags,
                           # TODO: Look into this, looks like all shwo map now
                           'has_map': 'map' in tags,
-                          'geotag': None}
+                          'geotag': None,
+                          'image_url': image_url}
 
                 if self.custom_result_fields:
                     self.customize_result(result, row)
@@ -389,6 +410,8 @@ class CraigslistHousing(CraigslistBase):
         'no_smoking': {'url_key': 'no_smoking', 'value': 1},
         'is_furnished': {'url_key': 'is_furnished', 'value': 1},
         'wheelchair_acccess': {'url_key': 'wheelchaccess', 'value': 1},
+        'hasPic': {'url_key': 'hasPic', 'value': 1},
+        'postal' : {'url_key': 'postal', 'value': None}
     }
 
 

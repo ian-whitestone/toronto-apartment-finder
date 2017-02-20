@@ -6,7 +6,35 @@ import os
 MIN_PRICE = 500
 
 # The maximum rent you want to pay per month.
-MAX_PRICE = 1800
+MAX_PRICE = 1900
+
+#
+HAS_IMAGE = 1
+
+#postal code
+POSTAL = 'M5J1E6'
+
+#distance
+SEARCH_DISTANCE = 5
+
+
+## Craigslist slack posting fields
+SLACK_PARAMS = {
+    'craigslist': {
+        'post_fields': {
+            'price' : 'Price: ',
+            'metro_dist': 'Distance to Subway (km): ',
+            'area': 'Neighborhood: '
+            },
+        'channel': 'craigslist'
+    },
+    'kijiji': {
+        'post_fields': {
+            'price' : 'Price: '
+            },
+        'channel': 'kijiji'
+    }
+}
 
 ## Location preferences
 
@@ -83,9 +111,6 @@ CRAIGSLIST_HOUSING_SECTION = 'apa'
 # Too slow may miss listings.
 SLEEP_INTERVAL = 1 * 60 # 20 minutes
 
-# Which slack channel to post the listings into.
-SLACK_CHANNEL_1 = "#craigslist"
-SLACK_CHANNEL_2 = "#kijiji"
 
 # The token that allows us to connect to slack.
 # Should be put in private.py, or set as an environment variable.

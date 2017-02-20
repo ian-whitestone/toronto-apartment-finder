@@ -3,7 +3,7 @@ from dateutil.parser import parse
 from util import post_listing_to_slack, find_points_of_interest, post_favourite, match_neighbourhood
 from slackclient import SlackClient
 import time
-import settings
+import src.settings
 import slacker
 import re
 import kijiji
@@ -18,8 +18,17 @@ def scrape_area(area):
     :return: A list of results.
     """
 
-    cl_h = CraigslistHousing(site=settings.CRAIGSLIST_SITE, area=area, category=settings.CRAIGSLIST_HOUSING_SECTION,
-                             filters={'max_price': settings.MAX_PRICE, "min_price": settings.MIN_PRICE})
+    cl_h = CraigslistHousing(
+        site=settings.CRAIGSLIST_SITE, area="tor",
+        category=settings.CRAIGSLIST_HOUSING_SECTION,
+        filters={
+            'max_price': settings.MAX_PRICE,
+            "min_price": settings.MIN_PRICE,
+            "hasPic": settings.HAS_IMAGE,
+            "postal": settings.POSTAL,
+            "search_distance": settings.SEARCH_DISTANCE
+            }
+        )
 
     results = []
 
@@ -69,7 +78,7 @@ def scrape_area(area):
                 created=parse(result["datetime"]),
                 lat=lat,
                 lon=lon,
-                name=result["name"],
+                title=result["title"],
                 price=price,
                 location=result["where"],
                 id=result["id"],
@@ -82,7 +91,7 @@ def scrape_area(area):
             session.commit()
 
             # Return the result if it has images, it's near a metro station, or if it is in an area we defined.
-            if result['has_image'] and (len(result["metro"]) > 0 or len(result["area"]) > 0) and check_title(result['name']):
+            if result['has_image'] and (len(result["metro"]) > 0 or len(result["area"]) > 0) and check_title(result['title']):
                 results.append(result)
 
     return results
@@ -144,16 +153,16 @@ def do_scrape():
     sc = SlackClient(settings.SLACK_TOKEN)
 
     # Get all the results from craigslist.
-    all_results = []
-    for area in settings.AREAS:
-        all_results += scrape_area(area)
-        pass
-
-    print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
-
-    # Post each result to slack.
-    for result in all_results:
-        post_listing_to_slack(sc, result, 'craigslist')
+    # all_results = []
+    # for area in settings.AREAS:
+    #     all_results += scrape_area(area)
+    #     pass
+    #
+    # print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
+    #
+    # # Post each result to slack.
+    # for result in all_results:
+    #     post_listing_to_slack(sc, result, 'craigslist')
 
     # Get all the results from kijiji.
     all_results = scrape_kijiji()
