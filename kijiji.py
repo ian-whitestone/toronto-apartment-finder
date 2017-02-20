@@ -62,13 +62,22 @@ def parse_listings(soup):
         desc = desc.strip().replace('\r','').replace('\t','')
         price = listing_soup.find('span', {'itemprop': 'price'}).get_text()
 
+        image = None
+        try:
+            image_parent = listing_soup.find('li', {'class': 'showing'})
+            image = image_parent.find('img', {'itemprop': 'image'})['src']
+            print (image)
+        except Exception as e:
+            print ('error finding kijiji image. Error %s' % str(e))
+
         ad_dict = {
             'title': title,
             'desc': desc,
             'price': price,
             'url': listing_url,
             'id': ad_id,
-            'address': address
+            'address': address,
+            'image': image
         }
 
         ad_dicts.append(ad_dict)
