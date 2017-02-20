@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#ignore entire presentation folder
+presentation/
+
 # C extensions
 *.so
 
