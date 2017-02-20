@@ -3,7 +3,7 @@ import os
 ## Price
 
 # The minimum rent you want to pay per month.
-MIN_PRICE = 1300
+MIN_PRICE = 500
 
 # The maximum rent you want to pay per month.
 MAX_PRICE = 1800
