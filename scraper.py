@@ -1,8 +1,4 @@
-from craigslist import CraigslistHousing
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean
-from sqlalchemy.orm import sessionmaker
+from src.craigslist import CraigslistHousing
 from dateutil.parser import parse
 from util import post_listing_to_slack, find_points_of_interest, post_favourite, match_neighbourhood
 from slackclient import SlackClient
@@ -11,52 +7,9 @@ import settings
 import slacker
 import re
 import kijiji
+from database_operations import ClListing, KjListing, create_sqlite_session
 
-
-
-## MOVE ALL THIS TO DATABASE OPERATIONS MODULE
-
-## SQL ALCHEMY OBJECTS
-engine = create_engine('sqlite:///listings.db', echo=False)
-Base = declarative_base()
-
-
-class ClListing(Base):
-    """
-    A table to store data on craigslist listings.
-    """
-
-    __tablename__ = 'craigslist'
-
-    id = Column(Integer, primary_key=True)
-    link = Column(String, unique=True)
-    created = Column(DateTime)
-    geotag = Column(String)
-    lat = Column(Float)
-    lon = Column(Float)
-    name = Column(String)
-    price = Column(Float)
-    location = Column(String)
-    cl_id = Column(Integer, unique=True)
-    area = Column(String)
-    metro_stop = Column(String)
-
-class KjListing(Base):
-    """
-    A table to store data on kjiji listings.
-    """
-
-    __tablename__ = 'kijiji'
-
-    id = Column(String, primary_key=True)
-    link = Column(String, unique=True)
-    price = Column(String)
-    title = Column(String)
-    address = Column(String)
-
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
+session = create_sqlite_session()
 
 def scrape_area(area):
     """
@@ -70,7 +23,7 @@ def scrape_area(area):
 
     results = []
 
-    gen = cl_h.get_results(sort_by='newest', geotagged=True)
+    gen = cl_h.get_results(sort_by='newest', geotagged=True, limit = 100)
     neighborhoods = []
     while True:
         try:
@@ -100,7 +53,6 @@ def scrape_area(area):
                 geo_data = find_points_of_interest(result["geotag"])
                 result.update(geo_data)
             else:
-                print (result)
                 geo_data = match_neighbourhood(result['where'])
                 result.update(geo_data)
 
@@ -195,6 +147,7 @@ def do_scrape():
     all_results = []
     for area in settings.AREAS:
         all_results += scrape_area(area)
+        pass
 
     print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
 
@@ -203,17 +156,14 @@ def do_scrape():
         post_listing_to_slack(sc, result, 'craigslist')
 
     # Get all the results from kijiji.
-    # all_results = scrape_kijiji()
-    #
-    # print("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
-    #
-    # for result in all_results:
-    #     post_listing_to_slack(sc, result, 'kijiji')
+    all_results = scrape_kijiji()
+
+    print("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
+
+    for result in all_results:
+        post_listing_to_slack(sc, result, 'kijiji')
 
     return
-
-
-
 
 
 def get_posted_favourites(bot,channel_dict):
