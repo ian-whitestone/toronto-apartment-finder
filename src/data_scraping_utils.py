@@ -8,10 +8,16 @@ try:
     import settings
 except:
     import src.settings as settings
+import time
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 #https://impythonist.wordpress.com/2015/01/06/ultimate-guide-for-scraping-javascript-rendered-web-pages/
 
-#Take this class for granted.Just use result of rendering.
+# DEPRECATED....TOO UNSTABLE
 class Render(QWebPage):
   def __init__(self, url):
     self.app = QApplication(sys.argv)
@@ -27,8 +33,20 @@ class Render(QWebPage):
 def get_html(url):
     r = Render(url)
     html = r.frame.toHtml()
+    r.app.quit()
+    r.frame = None
+    r.mainFrame = None
     return html
 
+class Browser():
+    def __init__(self,):
+        self.driver = webdriver.Chrome()
+
+    def scrape_url(self, url):
+        self.driver.get(url)
+        time.sleep(10)
+        html = self.driver.page_source
+        return html
 
 api_key = settings.GOOGLE_TOKEN
 
@@ -45,3 +63,5 @@ def get_coords(address):
     except Exception as err:
         print ('error retrieving address %s. Error %s' % (address, str(err)))
     return None, None
+
+## http://stackoverflow.com/questions/21909907/pyqt-class-not-working-for-the-second-usage/21918243#21918243
