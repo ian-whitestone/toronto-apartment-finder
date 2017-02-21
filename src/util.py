@@ -81,8 +81,6 @@ def post_listing_to_slack(sc, listing, site):
     return
 
 
-
-
 def post_favourite(bot,text):
     bot.chat.post_message('favourites', text, username = 'pybot' , icon_emoji=':robot_face:')
     return

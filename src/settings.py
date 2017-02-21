@@ -3,8 +3,8 @@ import os
 
 ## SITES - Set to True/False if you want them scraped
 
-CRAIGSLIST = True
-KIJIJI = False
+CRAIGSLIST = False
+KIJIJI = True
 
 ## Price Filters
 
@@ -32,6 +32,7 @@ SLACK_PARAMS = {
             'metro_dist': 'Distance to Subway (km): ',
             'area': 'Neighborhood: ',
             'where': 'Address: ',
+            'metro': 'Nearest Subway: ',
             'meta': 'Extra Info: '
             },
         'channel': 'craigslist'
@@ -39,7 +40,10 @@ SLACK_PARAMS = {
     'kijiji': {
         'post_fields': {
             'price' : 'Price: ',
-            'address': 'Address: '
+            'address': 'Address: ',
+            'metro_dist': 'Distance to Subway (km): ',
+            'area': 'Neighborhood: ',
+            'metro': 'Nearest Subway: '
             },
         'channel': 'kijiji'
     }
@@ -93,7 +97,7 @@ NEIGHBORHOODS = ['Yonge','Bloor','Queen','King','Toronto','Downtown','Liberty','
 ## Transit preferences
 
 # The farthest you want to live from a transit stop.
-MAX_TRANSIT_DIST = 2 # kilometers
+MAX_TRANSIT_DIST = 4 # kilometers
 
 # Transit stations you want to check against.  Every coordinate here will be checked against each listing,
 # and the closest station name will be added to the result and posted into Slack.

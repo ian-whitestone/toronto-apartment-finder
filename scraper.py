@@ -3,7 +3,7 @@ import src.kijiji as kijiji
 from src.util import post_listing_to_slack, find_points_of_interest, post_favourite, match_neighbourhood
 import src.settings as settings
 from database_operations import ClListing, KjListing, create_sqlite_session
-
+from src.data_scraping_utils import get_coords
 
 from dateutil.parser import parse
 from slackclient import SlackClient
@@ -139,6 +139,16 @@ def scrape_kijiji():
             # Save the listing so we don't grab it again.
             session.add(listing)
             session.commit()
+
+            lat, lon = get_coords(result['address'])
+            if lat and lon:
+                # Annotate the result with information about the area it's in and points of interest near it.
+                geo_data = find_points_of_interest([lat,lon])
+                result.update(geo_data)
+
+                if len(result["metro"]) == 0 or len(result["area"]) == 0:
+                    ## if it's not within X km of subway or in specified area, pass
+                    continue
 
             results.append(result)
         except:

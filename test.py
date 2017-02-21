@@ -1,36 +1,36 @@
 from src.craigslist import CraigslistHousing
-import settings
+import src.settings as settings
 from slackclient import SlackClient
 from bs4 import BeautifulSoup
 import requests
-import util
+import src.util as util
 
-sc = SlackClient(settings.SLACK_TOKEN)
-
-listing = {'title' : 'test', 'price': '$1500', 'url': 'http://toronto.craigslist.org/tor/apa/6011116782.html',
-'image_url': 'https://images.craigslist.org/00l0l_3Sr1PSsH4fd_300x300.jpg'}
-
-util.post_listing_to_slack(sc, listing, 'kijiji')
-
-# cl_h = CraigslistHousing(
-#     site=settings.CRAIGSLIST_SITE, area="tor",
-#     category=settings.CRAIGSLIST_HOUSING_SECTION,
-#     filters={
-#         'max_price': settings.MAX_PRICE,
-#         "min_price": settings.MIN_PRICE,
-#         "hasPic": settings.HAS_IMAGE,
-#         "postal": settings.POSTAL,
-#         "search_distance": settings.SEARCH_DISTANCE
-#         }
-#     )
+# sc = SlackClient(settings.SLACK_TOKEN)
 #
-# results = []
+# listing = {'title' : 'test', 'price': '$1500', 'url': 'http://toronto.craigslist.org/tor/apa/6011116782.html',
+# 'image_url': 'https://images.craigslist.org/00l0l_3Sr1PSsH4fd_300x300.jpg'}
 #
-# gen = cl_h.get_results(sort_by='newest', geotagged=True, limit = 100)
+# util.post_listing_to_slack(sc, listing, 'kijiji')
+
+cl_h = CraigslistHousing(
+    site=settings.CRAIGSLIST_SITE, area="tor",
+    category=settings.CRAIGSLIST_HOUSING_SECTION,
+    filters={
+        'max_price': settings.MAX_PRICE,
+        "min_price": settings.MIN_PRICE,
+        "hasPic": settings.HAS_IMAGE,
+        "postal": settings.POSTAL,
+        "search_distance": settings.SEARCH_DISTANCE
+        }
+    )
+
+results = []
+
+gen = cl_h.get_results(sort_by='newest', geotagged=True, limit = 100)
 #
-# for i in range(1,101):
-#     result = next(gen)
-#     print (i,result)
+for i in range(1,101):
+    result = next(gen)
+    print (i,result)
 
 
 # url = "https://toronto.craigslist.ca/search/apa?s=0&availabilityMode=0&hasPic=1&max_price=1800&min_price=1000&postal=M5J1E6&search_distance=5"
