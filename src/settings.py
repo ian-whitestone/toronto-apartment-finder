@@ -31,7 +31,8 @@ SLACK_PARAMS = {
             'price' : 'Price: ',
             'metro_dist': 'Distance to Subway (km): ',
             'area': 'Neighborhood: ',
-            'where': 'Address: '
+            'where': 'Address: ',
+            'meta': 'Extra Info: '
             },
         'channel': 'craigslist'
     },

@@ -1,3 +1,8 @@
+try:
+    import settings
+except:
+    import src.settings as settings
+
 
 ##scraping modules
 from bs4 import BeautifulSoup
@@ -9,11 +14,6 @@ import urllib.error
 import math
 import re
 
-## constants
-
-distance = 2.0 # km from postal code
-min_price = 0
-max_price = 1800
 
 unit_type = {
     'studio': 'b-bachelor-studio',
@@ -88,8 +88,9 @@ def find_listings():
 
     for unit in ['all','house']:
         main_url = 'http://www.kijiji.ca/' + unit_type[unit] + \
-            '-apartments-condos/city-of-toronto/c212l1700273r' + str(distance) + \
-            '?ad=offering&price=' + str(min_price) + '__' + str(max_price) + \
+            '-apartments-condos/city-of-toronto/c212l1700273r' +  \
+            str(settings.SEARCH_DISTANCE) + '?ad=offering&price=' + \
+            str(settings.MIN_PRICE) + '__' + str(settings.MAX_PRICE) + \
             '&minNumberOfImages=1&address=M5J+1E6&ll=43.645101,-79.381576&furnished=0'
 
         soup = get_soup(main_url)

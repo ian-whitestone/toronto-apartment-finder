@@ -1,4 +1,8 @@
-import settings
+try:
+    import settings
+except:
+    import src.settings as settings
+
 import math
 import slacker
 
@@ -56,7 +60,8 @@ def post_listing_to_slack(sc, listing, site):
         'color': '#7CD197',
         "title": listing.get('title',None),
         "title_link": listing.get('url',None),
-        "thumb_url": listing.get('image_url',None)
+        "image_url": listing.get('image_url',None)
+        # "thumb_url": listing.get('image_url',None)
     }
 
     attachments.append(header)

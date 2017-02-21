@@ -1,13 +1,15 @@
 from src.craigslist import CraigslistHousing
+import src.kijiji as kijiji
+from src.util import post_listing_to_slack, find_points_of_interest, post_favourite, match_neighbourhood
+import src.settings as settings
+from database_operations import ClListing, KjListing, create_sqlite_session
+
+
 from dateutil.parser import parse
-from util import post_listing_to_slack, find_points_of_interest, post_favourite, match_neighbourhood
 from slackclient import SlackClient
 import time
-import src.settings
 import slacker
 import re
-import kijiji
-from database_operations import ClListing, KjListing, create_sqlite_session
 
 session = create_sqlite_session()
 
@@ -153,24 +155,26 @@ def do_scrape():
     sc = SlackClient(settings.SLACK_TOKEN)
 
     # Get all the results from craigslist.
-    # all_results = []
-    # for area in settings.AREAS:
-    #     all_results += scrape_area(area)
-    #     pass
-    #
-    # print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
-    #
-    # # Post each result to slack.
-    # for result in all_results:
-    #     post_listing_to_slack(sc, result, 'craigslist')
+    if settings.CRAIGSLIST:
+        all_results = []
+        for area in settings.AREAS:
+            all_results += scrape_area(area)
+            pass
 
-    # Get all the results from kijiji.
-    all_results = scrape_kijiji()
+        print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
 
-    print("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
+        # Post each result to slack.
+        for result in all_results:
+            post_listing_to_slack(sc, result, 'craigslist')
 
-    for result in all_results:
-        post_listing_to_slack(sc, result, 'kijiji')
+    if settings.KIJIJI:
+        # Get all the results from kijiji.
+        all_results = scrape_kijiji()
+
+        print("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
+
+        for result in all_results:
+            post_listing_to_slack(sc, result, 'kijiji')
 
     return
 

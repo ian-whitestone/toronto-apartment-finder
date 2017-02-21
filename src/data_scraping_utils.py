@@ -3,8 +3,11 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4.QtWebKit import *
 from lxml import html
-import settings
 import requests
+try:
+    import settings
+except:
+    import src.settings as settings
 
 #https://impythonist.wordpress.com/2015/01/06/ultimate-guide-for-scraping-javascript-rendered-web-pages/
 

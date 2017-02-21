@@ -222,7 +222,11 @@ class CraigslistBase(object):
                 image_url = None
                 if image:
                     image_url = image['src']
-                    print (image_url)
+
+                base_meta = row.find('span', {'class': 'housing'})
+                meta = None
+                if base_meta:
+                    meta = base_meta.get_text().strip().replace('\n',' ')
 
                 result = {'id': id,
                           'title': name,
@@ -234,7 +238,8 @@ class CraigslistBase(object):
                           # TODO: Look into this, looks like all shwo map now
                           'has_map': 'map' in tags,
                           'geotag': None,
-                          'image_url': image_url}
+                          'image_url': image_url,
+                          'meta': meta}
 
                 if self.custom_result_fields:
                     self.customize_result(result, row)
