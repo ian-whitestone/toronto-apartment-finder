@@ -4,6 +4,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtWebKit import *
 from lxml import html
 import settings
+import requests
 
 #https://impythonist.wordpress.com/2015/01/06/ultimate-guide-for-scraping-javascript-rendered-web-pages/
 
@@ -26,24 +27,18 @@ def get_html(url):
     return html
 
 
-import requests
-
-req_url='https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'
-api_key = Ugen.ConfigSectionMap('googlemaps')['key']
-
-# api_response = requests.get(req_url.format(address,api_key))
-# api_response_dict = api_response.json()
-
+api_key = settings.GOOGLE_TOKEN
 
 def get_coords(address):
+    req_url = 'https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'
     address = address + ' Toronto, Ontario, Canada'
+
     try:
         response = requests.get(req_url.format(address,api_key))
         response_dict = response.json()
         coords=response_dict['results'][0]['geometry']['location']
         if response_dict['status'] == 'OK':
-            return coords['lat'],coords['lng'],response_dict['results'][0]['formatted_address'].replace(',','')
+            return coords['lat'],coords['lng']
     except Exception as err:
-        print (str(err))
-        pass
-    return None,None,None
+        print ('error retrieving address %s. Error %s' % (address, str(err)))
+    return None, None
