@@ -1,6 +1,12 @@
 import os
 
-## Price
+
+## SITES - Set to True/False if you want them scraped
+
+CRAIGSLIST = True
+KIJIJI = False
+
+## Price Filters
 
 # The minimum rent you want to pay per month.
 MIN_PRICE = 500
@@ -24,13 +30,15 @@ SLACK_PARAMS = {
         'post_fields': {
             'price' : 'Price: ',
             'metro_dist': 'Distance to Subway (km): ',
-            'area': 'Neighborhood: '
+            'area': 'Neighborhood: ',
+            'where': 'Address: '
             },
         'channel': 'craigslist'
     },
     'kijiji': {
         'post_fields': {
-            'price' : 'Price: '
+            'price' : 'Price: ',
+            'address': 'Address: '
             },
         'channel': 'kijiji'
     }
@@ -119,6 +127,11 @@ SLEEP_INTERVAL = 1 * 60 # 20 minutes
 #slack token in private.py
 try:
     from private import *
+except ImportError:
+    try:
+        from src.private import *
+    except:
+        pass
 except Exception:
     pass
 
