@@ -15,7 +15,8 @@ from requests.exceptions import RequestException
 from six import iteritems
 from six.moves import range
 from .sites import get_all_sites
-from .data_scraping_utils import get_html
+from .data_scraping_utils import Browser
+import time
 
 ALL_SITES = get_all_sites()  # All the Craiglist sites
 RESULTS_PER_REQUEST = 100  # Craigslist returns 100 results per request
@@ -40,8 +41,25 @@ def get_soup(base_url, filters):
 
     for filter,value in filters.items():
         url += filter + '=' + str(value) + '&'
+
     url = url[:-1]
-    html = get_html(url)
+    html = ''
+    page_start_ints = ['0', '100', '200']
+
+    browser = Browser()
+    ## scrape first page
+    print ('scraping %s' % url)
+    html += browser.scrape_url(url) ##append page sources to each other
+
+    for i in range(1,len(page_start_ints)):
+        s = page_start_ints[i]
+        page_url = url.replace('&s=' + page_start_ints[i-1],'&s=' + s)
+        page_url = page_url.replace('?s=' + page_start_ints[i-1],'?s=' + s)
+        print ('scraping %s' % page_url)
+        html += browser.scrape_url(page_url) ##append page sources to each other
+
+    print ('finished scraping')
+    browser.driver.quit()
     soup = BeautifulSoup(html, 'html.parser')
     return soup
 
@@ -194,6 +212,9 @@ class CraigslistBase(object):
 
             rows = soup.find_all('p', {'class': 'result-info'})
             listings = soup.find_all('li', {'class': 'result-row'})
+
+            print (len(rows))
+
             for row,listing in zip(rows,listings):
                 if limit is not None and total_so_far >= limit:
                     break
@@ -226,7 +247,8 @@ class CraigslistBase(object):
                 base_meta = row.find('span', {'class': 'housing'})
                 meta = None
                 if base_meta:
-                    meta = base_meta.get_text().strip().replace('\n',' ')
+                    meta = base_meta.get_text().strip().replace('\n','')
+                    meta = meta.replace('\t','')
 
                 result = {'id': id,
                           'title': name,
