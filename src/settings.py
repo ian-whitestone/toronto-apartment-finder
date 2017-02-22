@@ -3,7 +3,7 @@ import os
 
 ## SITES - Set to True/False if you want them scraped
 
-CRAIGSLIST = False
+CRAIGSLIST = True
 KIJIJI = True
 
 ## Price Filters
