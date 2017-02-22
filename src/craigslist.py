@@ -17,6 +17,7 @@ from six.moves import range
 from .sites import get_all_sites
 from .data_scraping_utils import Browser
 import time
+import re
 
 ALL_SITES = get_all_sites()  # All the Craiglist sites
 RESULTS_PER_REQUEST = 100  # Craigslist returns 100 results per request
@@ -247,8 +248,8 @@ class CraigslistBase(object):
                 base_meta = row.find('span', {'class': 'housing'})
                 meta = None
                 if base_meta:
-                    meta = base_meta.get_text().strip().replace('\n','')
-                    meta = meta.replace('\t','')
+                    meta = base_meta.get_text()
+                    meta = re.sub('[\s+]', '', meta).replace('-',' ')
 
                 result = {'id': id,
                           'title': name,
