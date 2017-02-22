@@ -57,7 +57,7 @@ def post_listing_to_slack(sc, listing, site):
 
     header = {
         "fallback": desc,
-        'color': '#7CD197',
+        'color': settings.DEFAULT_COLOUR,
         "title": listing.get('title',None),
         "title_link": listing.get('url',None),
         "image_url": listing.get('image_url',None)
@@ -69,7 +69,7 @@ def post_listing_to_slack(sc, listing, site):
     for key, field_desc in post_fields.items():
         payload = {
             'fallback': desc,
-            'color': '#7CD197',
+            'color': get_colour(key, listing),
             'text': field_desc + str(listing.get(key,''))
         }
         attachments.append(payload)
@@ -79,6 +79,28 @@ def post_listing_to_slack(sc, listing, site):
         username='apartment-finder', icon_emoji=':robot_face:'
     )
     return
+
+def get_colour(key, listing):
+    """Score feature with a colour based on preferred ranges
+    params
+        key: feature
+        listing: listing dict from scraper module
+    return
+        colour: good (green), warning(yellow), danger (red)
+    """
+    colours = settings.COLOURS
+    if key in colours.keys():
+        try:
+            value = float(listing[key].replace('$',''))
+        except:
+            value = listing[key]
+        colour_dict = colours[key]
+        for colour, scale in colour_dict.items():
+            if value >= scale[0] and value<= scale[1]:
+                return colour
+        return settings.DEFAULT_COLOUR
+    else:
+        return settings.DEFAULT_COLOUR
 
 
 def post_favourite(bot,text):

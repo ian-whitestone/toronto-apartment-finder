@@ -17,7 +17,7 @@ MAX_PRICE = 1900
 #
 HAS_IMAGE = 1
 
-#postal code
+#postal code to search within
 POSTAL = 'M5J1E6'
 
 #distance
@@ -48,6 +48,21 @@ SLACK_PARAMS = {
         'channel': 'kijiji'
     }
 }
+
+COLOURS = {
+    'price': {
+        'good': [0, 1500],
+        'warning': [1501, 1700],
+        'danger': [1701,10000]
+    },
+    'metro_dist': {
+        'good': [0, 0.75],
+        'warning': [0.76, 1.5],
+        'danger': [1.51,10]
+    }
+}
+
+DEFAULT_COLOUR = '#524e4d'
 
 ## Location preferences
 
