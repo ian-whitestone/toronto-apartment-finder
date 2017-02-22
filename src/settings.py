@@ -65,28 +65,28 @@ AREAS = ["tor"]
 # attached will be checked to see which area it is in.  If there's a match, it will be annotated with the area
 # name.  If no match, the neighborhood field, which is a string, will be checked to see if it matches
 # anything in NEIGHBORHOODS.
-BOXES = {
-    "distillery": [
+BOXES = [
+    ("distillery", [
         [43.646914, -79.352102],
         [43.658886,	-79.367383],
-    ],
-    "downtown-core": [
+    ]),
+    ("downtown-core", [
         [43.637597, -79.369183],
         [43.658055, -79.393217],
-    ],
-    "downtown-central": [
+    ]),
+    ("downtown-central", [
         [43.653807, -79.381885],
         [43.669574, -79.403172],
-    ],
-    "west": [
+    ]),
+    ("west", [
         [43.640951, -79.3824],
         [43.652867, -79.407291],
-    ],
-    'all': [
+    ]),
+    ('all', [
         [43.626943, -79.352875],
         [43.663712, -79.439907],
-    ]
-}
+    ])
+]
 
 # A list of neighborhood names to look for in the Craigslist neighborhood name field. If a listing doesn't fall into
 # one of the boxes you defined, it will be checked to see if the neighborhood name it was listed under matches one
