@@ -98,20 +98,24 @@ def find_points_of_interest(geotag):
     metro_dist = "N/A"
     metro = ""
     # Look to see if the listing is in any of the neighborhood boxes we defined.
-    for a, coords in settings.BOXES.items():
+    for hood in settings.BOXES:
+        name = hood[0]
+        coords = hood[1]
         if in_box(geotag, coords):
-            area = a
+            area = name
             area_found = True
 
     # Check to see if the listing is near any transit stations.
     for station, coords in settings.TRANSIT_STATIONS.items():
         dist = coord_distance(coords[0], coords[1], geotag[0], geotag[1])
+
         if (min_dist is None or dist < min_dist) and dist < settings.MAX_TRANSIT_DIST:
-            metro = station
             near_metro = True
 
         if (min_dist is None or dist < min_dist):
             metro_dist = dist
+            min_dist = dist
+            metro = station
 
     return {
         "area_found": area_found,
