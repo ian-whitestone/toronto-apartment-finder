@@ -2,12 +2,12 @@ import os
 
 ## Mode
 
-TESTING = True
+TESTING = False
 
 TESTING_CHANNEL = 'testing'
 
 ## SITES - Set to True/False if you want them scraped
-CRAIGSLIST = False
+CRAIGSLIST = True
 KIJIJI = True
 
 ## Price Filters
@@ -72,7 +72,7 @@ COLOURS = {
     },
     'area': {
         'levels': {
-            'good': ['st-lawrence', 'queen-west', 'libery-village', 'ossington',
+            'good': ['st-lawrence', 'queen-west', 'liberty-village', 'ossington',
                 'Queen', 'King', 'Liberty'],
             'warning': ['distillery','financial-district', 'mid-west',
                 'Spadina', 'College', 'Downtown'],
@@ -110,63 +110,63 @@ BOXES = [
         [43.644507, -79.370513],
         [43.655841, -79.376349],
     ]),
-    "financial-district", [
+    ("financial-district", [
         [43.644662, -79.376521],
         [43.649879, -79.387422],
     ]),
-    "yonge-corridor", [
+    ("yonge-corridor", [
         [43.649879, -79.383602],
         [43.670557, -79.387422],
     ]),
-    "mid-west", [
+    ("mid-west", [
         [43.650516, -79.389224],
         [43.669222, -79.412184],
     ]),
-    "mid-west", [
+    ("mid-west", [
         [43.649321, -79.394953],
         [43.663867, -79.417913],
     ]),
-    "queen-west", [
+    ("queen-west", [
         [43.643855, -79.384825],
         [43.65104, -79.407785],
     ]),
-    "queen-west", [
+    ("queen-west", [
         [43.641753, -79.391048],
         [43.648938, -79.41227],
     ]),
-    "queen-west", [
+    ("queen-west", [
         [43.640439, -79.40094],
         [43.643638, -79.410735],
     ]),
-    "liberty-village", [
+    ("liberty-village", [
         [43.637706, -79.411068],
         [43.644818, -79.427682],
     ]),
-    "liberty-village", [
+    ("liberty-village", [
         [43.635904, -79.417849],
         [43.639165, -79.426863],
     ]),
-    "ossington", [
+    ("ossington", [
         [43.643739, -79.417977],
         [43.64894, -79.421411],
     ]),
-    "ossington", [
+    ("ossington", [
         [43.648905, -79.420209],
         [43.658337, -79.423728],
     ]),
-    "ossington", [
+    ("ossington", [
         [43.652631, -79.422354],
         [43.662062, -79.425874],
     ]),
-    "bloor-west", [
+    ("bloor-west", [
         [43.657689, -79.427537],
         [43.667313, -79.452792],
     ]),
-    "bloor-west", [
+    ("bloor-west", [
         [43.661725, -79.407195],
         [43.671348, -79.432451],
     ]),
-    "bloor-west", [
+    ("bloor-west", [
         [43.667251, -79.388999],
         [43.676873, -79.414255],
     ])

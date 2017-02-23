@@ -151,6 +151,7 @@ def scrape_kijiji():
                 geo_data = find_points_of_interest([lat,lon])
                 result.update(geo_data)
 
+                ## only scrub listings that we actually verified were out of range
                 if len(result["metro"]) == 0 or len(result["area"]) == 0:
                     ## if it's not within X km of subway or in specified area, pass
                     continue

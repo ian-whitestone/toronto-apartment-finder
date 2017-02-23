@@ -136,13 +136,9 @@ def get_colour(key, listing):
                     if value in levels:
                         return colour
 
-
-            if isinstance(value,float):
-
             return settings.DEFAULT_COLOUR
-
-        except:
-            return settings.DEFAULT_COLOUR
+    except:
+        return settings.DEFAULT_COLOUR
 
     return settings.DEFAULT_COLOUR
 
