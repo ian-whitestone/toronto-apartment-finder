@@ -97,8 +97,10 @@ def find_listings():
         ads = parse_listings(soup)
         listings_dicts += ads
         next_page = soup.find('a', {'title': 'Next'})
-        
-        while next_page:
+
+        i = 0
+        while next_page and i <= 10: ## only do 10 pages
+            i += 1
             soup = get_soup('http://www.kijiji.ca' + next_page['href'])
             ads = parse_listings(soup)
             listings_dicts += ads

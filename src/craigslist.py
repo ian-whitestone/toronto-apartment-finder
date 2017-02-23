@@ -214,8 +214,6 @@ class CraigslistBase(object):
             rows = soup.find_all('p', {'class': 'result-info'})
             listings = soup.find_all('li', {'class': 'result-row'})
 
-            print (len(rows))
-
             for row,listing in zip(rows,listings):
                 if limit is not None and total_so_far >= limit:
                     break
