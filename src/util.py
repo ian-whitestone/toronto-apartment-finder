@@ -71,6 +71,7 @@ def post_listing_to_slack(sc, listing, site):
             'fallback': desc,
             'color': get_colour(key, listing),
             'text': field_desc + str(listing.get(key,''))
+            # 'short': True --> can only do this for fields! not attachments
         }
         attachments.append(payload)
 
@@ -79,6 +80,24 @@ def post_listing_to_slack(sc, listing, site):
         username='apartment-finder', icon_emoji=':robot_face:'
     )
     return
+
+## TODO: group attachments with same colours
+## format like below
+# {
+#             "fallback": "Required plain-text summary of the attachment.",
+#             "color": "#36a64f",
+#             "fields": [
+#                 {
+#                     "value": "Hood: High",
+#                     "short": true
+#                 },
+# 				 {
+#                     "value": "Price: High",
+#                     "short": true
+#                 }
+#
+#             ]
+#         }
 
 def get_colour(key, listing):
     """Score feature with a colour based on preferred ranges
@@ -89,18 +108,24 @@ def get_colour(key, listing):
         colour: good (green), warning(yellow), danger (red)
     """
     colours = settings.COLOURS
-    if key in colours.keys():
+    if key in colours.keys() and key in listing.keys():
         try:
-            value = float(listing[key].replace('$',''))
+            if isinstance(listing[key], str):
+                value = float(listing[key].replace('$',''))
+            else:
+                value = float(listing[key])
         except:
-            value = listing[key]
+            return settings.DEFAULT_COLOUR
+
         colour_dict = colours[key]
-        for colour, scale in colour_dict.items():
-            if value >= scale[0] and value<= scale[1]:
-                return colour
+        if isinstance(value,float):
+            for colour, scale in colour_dict.items():
+                if value >= scale[0] and value<= scale[1]:
+                    return colour
         return settings.DEFAULT_COLOUR
     else:
         return settings.DEFAULT_COLOUR
+
 
 
 def post_favourite(bot,text):
