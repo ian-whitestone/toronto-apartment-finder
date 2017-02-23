@@ -117,24 +117,34 @@ def get_colour(key, listing):
         colour: good (green), warning(yellow), danger (red)
     """
     colours = settings.COLOURS
-    if key in colours.keys() and key in listing.keys():
+    try:
+        if key in colours.keys() and key in listing.keys():
+            colour_dict = colours[key]
 
-        try:
-            if isinstance(listing[key], str):
-                value = float(listing[key].replace('$','').replace(',',''))
+            if colour_dict['type'] == 'range':
+                if isinstance(listing[key], str):
+                    value = float(listing[key].replace('$','').replace(',',''))
+                else:
+                    value = float(listing[key])
+
+                for colour, scale in colour_dict['levels'].items():
+                    if value >= scale[0] and value <= scale[1]:
+                        return colour
             else:
-                value = float(listing[key])
+                value = listing[key]
+                for colour, levels in colour_dict['levels'].items():
+                    if value in levels:
+                        return colour
+
+
+            if isinstance(value,float):
+
+            return settings.DEFAULT_COLOUR
+
         except:
             return settings.DEFAULT_COLOUR
 
-        colour_dict = colours[key]
-        if isinstance(value,float):
-            for colour, scale in colour_dict.items():
-                if value >= scale[0] and value <= scale[1]:
-                    return colour
-        return settings.DEFAULT_COLOUR
-    else:
-        return settings.DEFAULT_COLOUR
+    return settings.DEFAULT_COLOUR
 
 
 
@@ -161,6 +171,7 @@ def find_points_of_interest(geotag):
         if in_box(geotag, coords):
             area = name
             area_found = True
+            break
 
     # Check to see if the listing is near any transit stations.
     for station, coords in settings.TRANSIT_STATIONS.items():
