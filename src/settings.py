@@ -7,7 +7,7 @@ TESTING = True
 TESTING_CHANNEL = 'testing'
 
 ## SITES - Set to True/False if you want them scraped
-CRAIGSLIST = True
+CRAIGSLIST = False
 KIJIJI = True
 
 ## Price Filters
@@ -55,14 +55,31 @@ SLACK_PARAMS = {
 
 COLOURS = {
     'price': {
-        'good': [0, 1500],
-        'warning': [1501, 1700],
-        'danger': [1701,10000]
+        'levels': {
+            'good': [0, 1500],
+            'warning': [1501, 1700],
+            'danger': [1701,10000]
+        },
+        'type': "range"
     },
     'metro_dist': {
-        'good': [0, 0.75],
-        'warning': [0.76, 1.5],
-        'danger': [1.51,10]
+        'levels': {
+            'good': [0, 0.75],
+            'warning': [0.76, 1.5],
+            'danger': [1.51,10]
+        },
+        'type': "range"
+    },
+    'area': {
+        'levels': {
+            'good': ['st-lawrence', 'queen-west', 'libery-village', 'ossington',
+                'Queen', 'King', 'Liberty'],
+            'warning': ['distillery','financial-district', 'mid-west',
+                'Spadina', 'College', 'Downtown'],
+            'danger': ['yonge-corridor','bloor-west', 'Yonge',
+                'Bloor', 'Toronto']
+        },
+        'type': "list"
     }
 }
 
@@ -86,30 +103,76 @@ AREAS = ["tor"]
 # anything in NEIGHBORHOODS.
 BOXES = [
     ("distillery", [
-        [43.646914, -79.352102],
-        [43.658886,	-79.367383],
+        [43.650516, -79.35236],
+        [43.655841,	-79.370513],
     ]),
-    ("downtown-core", [
-        [43.637597, -79.369183],
-        [43.658055, -79.393217],
+    ("st-lawrence", [
+        [43.644507, -79.370513],
+        [43.655841, -79.376349],
     ]),
-    ("downtown-central", [
-        [43.653807, -79.381885],
-        [43.669574, -79.403172],
+    "financial-district", [
+        [43.644662, -79.376521],
+        [43.649879, -79.387422],
     ]),
-    ("mid-west", [
-        [43.64946, -79.396048],
-        [43.667965, -79.459906],
+    "yonge-corridor", [
+        [43.649879, -79.383602],
+        [43.670557, -79.387422],
     ]),
-    ("south-west", [
-        [43.640951, -79.3824],
-        [43.652867, -79.407291],
+    "mid-west", [
+        [43.650516, -79.389224],
+        [43.669222, -79.412184],
     ]),
-    ('all', [
-        [43.626943, -79.352875],
-        [43.663712, -79.439907],
+    "mid-west", [
+        [43.649321, -79.394953],
+        [43.663867, -79.417913],
+    ]),
+    "queen-west", [
+        [43.643855, -79.384825],
+        [43.65104, -79.407785],
+    ]),
+    "queen-west", [
+        [43.641753, -79.391048],
+        [43.648938, -79.41227],
+    ]),
+    "queen-west", [
+        [43.640439, -79.40094],
+        [43.643638, -79.410735],
+    ]),
+    "liberty-village", [
+        [43.637706, -79.411068],
+        [43.644818, -79.427682],
+    ]),
+    "liberty-village", [
+        [43.635904, -79.417849],
+        [43.639165, -79.426863],
+    ]),
+    "ossington", [
+        [43.643739, -79.417977],
+        [43.64894, -79.421411],
+    ]),
+    "ossington", [
+        [43.648905, -79.420209],
+        [43.658337, -79.423728],
+    ]),
+    "ossington", [
+        [43.652631, -79.422354],
+        [43.662062, -79.425874],
+    ]),
+    "bloor-west", [
+        [43.657689, -79.427537],
+        [43.667313, -79.452792],
+    ]),
+    "bloor-west", [
+        [43.661725, -79.407195],
+        [43.671348, -79.432451],
+    ]),
+    "bloor-west", [
+        [43.667251, -79.388999],
+        [43.676873, -79.414255],
     ])
 ]
+
+
 
 # A list of neighborhood names to look for in the Craigslist neighborhood name field. If a listing doesn't fall into
 # one of the boxes you defined, it will be checked to see if the neighborhood name it was listed under matches one
