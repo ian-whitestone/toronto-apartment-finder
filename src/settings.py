@@ -1,8 +1,12 @@
 import os
 
+## Mode
+
+TESTING = True
+
+TESTING_CHANNEL = 'testing'
 
 ## SITES - Set to True/False if you want them scraped
-
 CRAIGSLIST = True
 KIJIJI = True
 

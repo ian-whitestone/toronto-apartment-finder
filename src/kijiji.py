@@ -98,8 +98,13 @@ def find_listings():
         listings_dicts += ads
         next_page = soup.find('a', {'title': 'Next'})
 
-        i = 0
-        while next_page and i <= 10: ## only do 10 pages
+        i = 1
+        if settings.TESTING:
+            max_pages = 1
+        else:
+            max_pages = 10
+            
+        while next_page and i < max_pages: ## only do 10 pages (1 already done above)
             i += 1
             soup = get_soup('http://www.kijiji.ca' + next_page['href'])
             ads = parse_listings(soup)
@@ -107,15 +112,3 @@ def find_listings():
             next_page = soup.find('a', {'title':'Next'})
 
     return listings_dicts
-
-
-
-## TO DO
-# scrape street address, postal, phone number, availability from ad
-# convert address to lat/lon from goodle maps api
-
-
-# ## not required anymore since you just check for "Next" button
-# showing = soup.find("div", {"class": "showing"})
-# num_listings = showing.get_text().strip().split()[-2]
-# num_pages = math.ceil(int(num_listings)/20)

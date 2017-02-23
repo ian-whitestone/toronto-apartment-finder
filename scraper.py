@@ -48,7 +48,7 @@ def scrape_area(area):
         listing = session.query(ClListing).filter_by(id=result["id"]).first()
 
         # Don't store the listing if it already exists.
-        if listing is None:
+        if listing is None and not settings.TESTING:
             if result["where"] is None and result["geotag"] is None:
                 # If there is no string identifying which neighborhood the result is from or no geotag, skip it.
                 continue
@@ -89,11 +89,14 @@ def scrape_area(area):
             )
 
             # Save the listing so we don't grab it again.
-            session.add(listing)
-            session.commit()
+            if not settings.TESTING:
+                session.add(listing)
+                session.commit()
 
-            # Return the result if it has images, it's near a metro station, or if it is in an area we defined.
-            if result['has_image'] and (len(result["metro"]) > 0 or len(result["area"]) > 0) and check_title(result['title']):
+            # Return the result if it has images, it's near a metro station,
+            # or if it is in an area we defined.
+            if result['has_image'] and (len(result["metro"]) > 0  \
+                or len(result["area"]) > 0) and check_title(result['title']):
                 results.append(result)
 
     return results
@@ -124,7 +127,8 @@ def scrape_kijiji():
         try:
             listing = session.query(KjListing).filter_by(id=result["id"]).first()
 
-            if listing: ## if listing is already in the db, don't append
+            ## if listing is already in the db and in production mode, don't append
+            if listing and not settings.TESTING:
                 continue
 
             # Create the listing object.
@@ -137,8 +141,9 @@ def scrape_kijiji():
             )
 
             # Save the listing so we don't grab it again.
-            session.add(listing)
-            session.commit()
+            if not settings.TESTING:
+                session.add(listing)
+                session.commit()
 
             lat, lon = get_coords(result['address'])
             if lat and lon:

@@ -41,17 +41,30 @@ def post_listing_to_slack(sc, listing, site):
     :param listing: A record of the listing.
     :param site: craigslist or kijiji
     """
+    if settings.TESTING:
+        channel = settings.TESTING_CHANNEL
+    else:
+        channel = settings.SLACK_PARAMS[site]['channel']
 
-    channel = settings.SLACK_PARAMS[site]['channel']
+    attachment = build_attachment(listing, site)
+
+    sc.api_call(
+        "chat.postMessage", channel=channel, attachments=attachments,
+        username='apartment-finder', icon_emoji=':robot_face:'
+    )
+    return
+
+def build_attachment(listing, site):
+
     post_fields = settings.SLACK_PARAMS[site]['post_fields']
     attachments = []
     if site == 'craigslist':
         desc = "{0} | {1} | {2} | {3} | <{4}>".format(listing["area"],
             listing["price"], listing["metro_dist"],
-            listing["title"], listing["url"]
-        )
+            listing["title"], listing["url"])
     elif site == 'kijiji':
-        desc = "{0} | {1} | <{2}>".format(listing['price'], listing['title'], listing["url"])
+        desc = "{0} | {1} | <{2}>".format(listing['price'],
+            listing['title'], listing["url"])
     else:
         return
 
@@ -75,11 +88,7 @@ def post_listing_to_slack(sc, listing, site):
         }
         attachments.append(payload)
 
-    sc.api_call(
-        "chat.postMessage", channel=channel, attachments=attachments,
-        username='apartment-finder', icon_emoji=':robot_face:'
-    )
-    return
+    return attachments
 
 ## TODO: group attachments with same colours
 ## format like below
