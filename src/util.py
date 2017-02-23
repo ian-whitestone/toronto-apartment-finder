@@ -49,7 +49,7 @@ def post_listing_to_slack(sc, listing, site):
     attachment = build_attachment(listing, site)
 
     sc.api_call(
-        "chat.postMessage", channel=channel, attachments=attachments,
+        "chat.postMessage", channel=channel, attachments=attachment,
         username='apartment-finder', icon_emoji=':robot_face:'
     )
     return
@@ -118,9 +118,10 @@ def get_colour(key, listing):
     """
     colours = settings.COLOURS
     if key in colours.keys() and key in listing.keys():
+
         try:
             if isinstance(listing[key], str):
-                value = float(listing[key].replace('$',''))
+                value = float(listing[key].replace('$','').replace(',',''))
             else:
                 value = float(listing[key])
         except:
@@ -129,7 +130,7 @@ def get_colour(key, listing):
         colour_dict = colours[key]
         if isinstance(value,float):
             for colour, scale in colour_dict.items():
-                if value >= scale[0] and value<= scale[1]:
+                if value >= scale[0] and value <= scale[1]:
                     return colour
         return settings.DEFAULT_COLOUR
     else:
