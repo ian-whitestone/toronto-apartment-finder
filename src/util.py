@@ -44,7 +44,7 @@ def post_listing_to_slack(sc, listing, site):
     if settings.TESTING:
         channel = settings.TESTING_CHANNEL
     else:
-        channel = settings.SLACK_PARAMS[site]['channel']
+        channel = settings.SLACK_CHANNELS.get(listing['area'],'mid-west')
 
     attachment = build_attachment(listing, site)
 
@@ -54,10 +54,7 @@ def post_listing_to_slack(sc, listing, site):
     )
     return
 
-def build_attachment(listing, site):
-
-    post_fields = settings.SLACK_PARAMS[site]['post_fields']
-    attachments = []
+def get_desc(listing, site):
     if site == 'craigslist':
         desc = "{0} | {1} | {2} | {3} | <{4}>".format(listing["area"],
             listing["price"], listing["metro_dist"],
@@ -66,7 +63,13 @@ def build_attachment(listing, site):
         desc = "{0} | {1} | <{2}>".format(listing['price'],
             listing['title'], listing["url"])
     else:
-        return
+        desc = "No description"
+    return desc
+
+def build_attachment(listing, site):
+    attachments = []
+
+    desc = get_desc(listing, site)
 
     header = {
         "fallback": desc,
@@ -78,18 +81,26 @@ def build_attachment(listing, site):
     }
 
     attachments.append(header)
-    colours = {}
-    for key, field_desc in post_fields.items():
-        colours[key] = get_colour(key, listing)
+
+    fields = get_attachment_fields(listing, site)
+    attachments += fields
+
+    return attachments
+
+def get_attachment_fields(listing, site):
+    attachments = []
+    post_fields = settings.SLACK_PARAMS[site]
+
+    colours = {key:get_colour(key, listing)
+        for key, field_desc in post_fields.items()}
 
     for colour in settings.COLOUR_ORDER:
         fields = [{'short': True, 'value': field_desc + str(listing.get(key,''))}
-            for key, field_desc in post_fields.items()
-            if colours[key] == colour]
+            for key, field_desc in post_fields.items() if colours[key] == colour]
 
         if fields:
             payload = {
-                'fallback': desc,
+                'fallback': 'N/A',
                 'color': colour,
                 'fields': fields
             }
