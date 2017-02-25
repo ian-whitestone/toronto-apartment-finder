@@ -50,7 +50,7 @@ def post_listing_to_slack(sc, listing, site):
 
     sc.api_call(
         "chat.postMessage", channel=channel, attachments=attachment,
-        username='apartment-finder', icon_emoji=':robot_face:'
+        username=settings.SLACK_BOT, icon_emoji=':robot_face:'
     )
     return
 
@@ -78,35 +78,24 @@ def build_attachment(listing, site):
     }
 
     attachments.append(header)
-
+    colours = {}
     for key, field_desc in post_fields.items():
-        payload = {
-            'fallback': desc,
-            'color': get_colour(key, listing),
-            'text': field_desc + str(listing.get(key,''))
-            # 'short': True --> can only do this for fields! not attachments
-        }
-        attachments.append(payload)
+        colours[key] = get_colour(key, listing)
+
+    for colour in settings.COLOUR_ORDER:
+        fields = [{'short': True, 'value': field_desc + str(listing.get(key,''))}
+            for key, field_desc in post_fields.items()
+            if colours[key] == colour]
+
+        if fields:
+            payload = {
+                'fallback': desc,
+                'color': colour,
+                'fields': fields
+            }
+            attachments.append(payload)
 
     return attachments
-
-## TODO: group attachments with same colours
-## format like below
-# {
-#             "fallback": "Required plain-text summary of the attachment.",
-#             "color": "#36a64f",
-#             "fields": [
-#                 {
-#                     "value": "Hood: High",
-#                     "short": true
-#                 },
-# 				 {
-#                     "value": "Price: High",
-#                     "short": true
-#                 }
-#
-#             ]
-#         }
 
 def get_colour(key, listing):
     """Score feature with a colour based on preferred ranges

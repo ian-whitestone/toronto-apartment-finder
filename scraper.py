@@ -48,56 +48,58 @@ def scrape_area(area):
         listing = session.query(ClListing).filter_by(id=result["id"]).first()
 
         # Don't store the listing if it already exists.
-        if listing is None and not settings.TESTING:
-            if result["where"] is None and result["geotag"] is None:
-                # If there is no string identifying which neighborhood the result is from or no geotag, skip it.
-                continue
+        if listing is not None and settings.TESTING == False:
+            continue
 
-            lat = 0
-            lon = 0
-            if result["geotag"]:
-                # Assign the coordinates.
-                lat = result["geotag"][0]
-                lon = result["geotag"][1]
+        if result["where"] is None and result["geotag"] is None:
+            # If there is no string identifying which neighborhood the result is from or no geotag, skip it.
+            continue
 
-                # Annotate the result with information about the area it's in and points of interest near it.
-                geo_data = find_points_of_interest(result["geotag"])
-                result.update(geo_data)
-            else:
-                geo_data = match_neighbourhood(result['where'])
-                result.update(geo_data)
+        lat = 0
+        lon = 0
+        if result["geotag"]:
+            # Assign the coordinates.
+            lat = result["geotag"][0]
+            lon = result["geotag"][1]
 
-            # Try parsing the price.
-            price = 0
-            try:
-                price = float(result["price"].replace("$", ""))
-            except Exception:
-                pass
+            # Annotate the result with information about the area it's in and points of interest near it.
+            geo_data = find_points_of_interest(result["geotag"])
+            result.update(geo_data)
+        else:
+            geo_data = match_neighbourhood(result['where'])
+            result.update(geo_data)
 
-            # Create the listing object.
-            listing = ClListing(
-                link=result["url"],
-                created=parse(result["datetime"]),
-                lat=lat,
-                lon=lon,
-                title=result["title"],
-                price=price,
-                location=result["where"],
-                id=result["id"],
-                area=result["area"],
-                metro_stop=result["metro"]
-            )
+        # Try parsing the price.
+        price = 0
+        try:
+            price = float(result["price"].replace("$", ""))
+        except Exception:
+            pass
 
-            # Save the listing so we don't grab it again.
-            if not settings.TESTING:
-                session.add(listing)
-                session.commit()
+        # Create the listing object.
+        listing = ClListing(
+            link=result["url"],
+            created=parse(result["datetime"]),
+            lat=lat,
+            lon=lon,
+            title=result["title"],
+            price=price,
+            location=result["where"],
+            id=result["id"],
+            area=result["area"],
+            metro_stop=result["metro"]
+        )
 
-            # Return the result if it has images, it's near a metro station,
-            # or if it is in an area we defined.
-            if result['has_image'] and (len(result["metro"]) > 0  \
-                or len(result["area"]) > 0) and check_title(result['title']):
-                results.append(result)
+        # Save the listing so we don't grab it again.
+        if not settings.TESTING:
+            session.add(listing)
+            session.commit()
+
+        # Return the result if it has images, it's near a metro station,
+        # or if it is in an area we defined.
+        if result['has_image'] and len(result["area"]) > 0 \
+            and check_title(result['title']):
+            results.append(result)
 
     return results
 
@@ -152,7 +154,8 @@ def scrape_kijiji():
                 result.update(geo_data)
 
                 ## only scrub listings that we actually verified were out of range
-                if len(result["metro"]) == 0 or len(result["area"]) == 0:
+                if len(result["area"]) == 0 or check_title(result['title']) == False:
+                    ## len(result["metro"]) == 0 or ## old subway dist filter
                     ## if it's not within X km of subway or in specified area, pass
                     continue
 

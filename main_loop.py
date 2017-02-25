@@ -6,26 +6,24 @@ import sys
 import traceback
 
 if __name__ == "__main__":
-    while True:
-        print("{}: Checking for favourites".format(time.ctime()))
+    # while True:
+    print("{}: Checking for favourites".format(time.ctime()))
+    try:
         post_favourites()
-        try:
-            pass
-        except:
-            print ('error checking favourites')
-            break
-        print("{}: Starting scrape cycle".format(time.ctime()))
-        try:
-            do_scrape()
-        except KeyboardInterrupt:
-            print("Exiting....")
-            sys.exit(1)
-        except Exception as exc:
-            print("Error with the scraping:", sys.exc_info()[0])
-            traceback.print_exc()
-        else:
-            print("{}: Successfully finished scraping".format(time.ctime()))
-        time.sleep(settings.SLEEP_INTERVAL)
+    except:
+        print ('error checking favourites')
+    print("{}: Starting scrape cycle".format(time.ctime()))
+    try:
+        do_scrape()
+    except KeyboardInterrupt:
+        print("Exiting....")
+        sys.exit(1)
+    except Exception as exc:
+        print("Error with the scraping:", sys.exc_info()[0])
+        traceback.print_exc()
+    else:
+        print("{}: Successfully finished scraping".format(time.ctime()))
+    time.sleep(settings.SLEEP_INTERVAL)
 
 
 ## TO DO

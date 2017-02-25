@@ -37,6 +37,7 @@ def parse_address(ad_table):
             th = tr.find('th').get_text()
             if th == 'Address':
                 address = tr.find('td').get_text().split('\n')[0]
+                address = address.split(',')[0]
                 return address
         except:
             pass
@@ -103,7 +104,7 @@ def find_listings():
             max_pages = 1
         else:
             max_pages = 10
-            
+
         while next_page and i < max_pages: ## only do 10 pages (1 already done above)
             i += 1
             soup = get_soup('http://www.kijiji.ca' + next_page['href'])

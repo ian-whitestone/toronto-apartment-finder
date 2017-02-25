@@ -2,13 +2,16 @@ import os
 
 ## Mode
 
-TESTING = False
+TESTING = True
 
 TESTING_CHANNEL = 'testing'
 
+##
+SLACK_BOT = 'toby'
+
 ## SITES - Set to True/False if you want them scraped
 CRAIGSLIST = True
-KIJIJI = True
+KIJIJI = False
 
 ## Price Filters
 
@@ -33,7 +36,7 @@ SLACK_PARAMS = {
     'craigslist': {
         'post_fields': {
             'price' : 'Price: ',
-            'metro_dist': 'Distance to Subway (km): ',
+            'metro_dist': 'Subway (km): ',
             'area': 'Neighborhood: ',
             'where': 'Address: ',
             'metro': 'Nearest Subway: ',
@@ -45,7 +48,7 @@ SLACK_PARAMS = {
         'post_fields': {
             'price' : 'Price: ',
             'address': 'Address: ',
-            'metro_dist': 'Distance to Subway (km): ',
+            'metro_dist': 'Subway (km): ',
             'area': 'Neighborhood: ',
             'metro': 'Nearest Subway: '
             },
@@ -84,6 +87,8 @@ COLOURS = {
 }
 
 DEFAULT_COLOUR = '#524e4d'
+
+COLOUR_ORDER = ['#524e4d', 'good', 'warning', 'danger']
 
 ## Location preferences
 
@@ -194,20 +199,20 @@ TRANSIT_STATIONS = {
     "king": [43.648674, -79.377835],
     "queen": [43.652307, -79.379208],
     "college": [43.6613247, -79.3852633],
-    "dundas": [43.6552859,-79.3797379],
-    "st_patrick": [43.6538735,-79.3832671],
-    "queens_park": [43.6538735,-79.3832671],
-    "museum": [43.663281,-79.3969142],
-    "spadina": [43.663281,-79.3969142],
-    "st_george": [43.663281,-79.3969142],
-    "wellesley": [43.663281,-79.3969142],
-    "bloor_yonge": [43.663281,-79.3969142],
-    "bay": [43.6634052,-79.3968713],
-    'dupont': [43.6670063,-79.4074714],
-    'bathurst': [43.6629395,-79.4161832],
-    'christie': [43.6629395,-79.4161832],
-    'ossington': [43.6603316,-79.4264829],
-    'dufferin': [43.6582514,-79.4377267]
+    "dundas": [43.6552859, -79.3797379],
+    "st_patrick": [43.6538735, -79.3832671],
+    "queens_park": [43.6538735, -79.3832671],
+    "museum": [43.663281, -79.3969142],
+    "spadina": [43.663281, -79.3969142],
+    "st_george": [43.663281, -79.3969142],
+    "wellesley": [43.663281, -79.3969142],
+    "bloor_yonge": [43.663281, -79.3969142],
+    "bay": [43.6634052, -79.3968713],
+    'dupont': [43.6670063, -79.4074714],
+    'bathurst': [43.6629395, -79.4161832],
+    'christie': [43.6629395, -79.4161832],
+    'ossington': [43.6603316, -79.4264829],
+    'dufferin': [43.6582514, -79.4377267]
 }
 
 ## Search type preferences

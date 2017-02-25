@@ -52,9 +52,10 @@ def get_soup(base_url, filters):
     print ('scraping %s' % url)
     html += browser.scrape_url(url) ##append page sources to each other
 
+    page_url = url
     for i in range(1,len(page_start_ints)):
         s = page_start_ints[i]
-        page_url = url.replace('&s=' + page_start_ints[i-1],'&s=' + s)
+        page_url = page_url.replace('&s=' + page_start_ints[i-1],'&s=' + s)
         page_url = page_url.replace('?s=' + page_start_ints[i-1],'?s=' + s)
         print ('scraping %s' % page_url)
         html += browser.scrape_url(page_url) ##append page sources to each other
