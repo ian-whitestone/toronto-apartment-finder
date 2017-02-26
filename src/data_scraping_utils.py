@@ -1,19 +1,21 @@
+## standard library imports
 import sys
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from PyQt4.QtWebKit import *
 from lxml import html
 import requests
-try:
-    import settings
-except:
-    import src.settings as settings
 import time
+
+## third party library imports
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+
+## local library imports
+import src.settings as settings
 
 #https://impythonist.wordpress.com/2015/01/06/ultimate-guide-for-scraping-javascript-rendered-web-pages/
 

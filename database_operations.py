@@ -39,6 +39,18 @@ class KjListing(Base):
     title = Column(String)
     address = Column(String)
 
+
+class Favourites(Base):
+    """
+    A table to store data on favourites.
+    """
+
+    __tablename__ = 'favourites'
+
+    link = Column(String, primary_key=True)
+    title = Column(String)
+
+
 def create_sqlite_session():
   engine = create_engine('sqlite:///listings.db', echo=False)
   Base.metadata.create_all(engine)

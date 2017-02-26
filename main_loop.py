@@ -1,9 +1,15 @@
-from scraper import do_scrape
-from scraper import post_favourites
-import src.settings as settings
+
+## standard library imports
 import time
 import sys
 import traceback
+
+## third party library imports
+
+## local library imports
+from scraper import do_scrape
+from scraper import post_favourites
+import src.settings as settings
 
 if __name__ == "__main__":
     # while True:

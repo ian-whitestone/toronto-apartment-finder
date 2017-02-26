@@ -15,7 +15,7 @@ import math
 import re
 
 
-unit_type = {
+UNIT_TYPE = {
     'studio': 'b-bachelor-studio',
     '1bed': 'b-1-bedroom',
     '1bed_den': 'b-1-bedroom-den',
@@ -69,7 +69,8 @@ def parse_listings(soup):
             if image_parent:
                 image = image_parent.find('img', {'itemprop': 'image'})['src']
         except Exception as e:
-            print ('error finding kijiji image. Error %s' % str(e))
+            # print ('error finding kijiji image. Error %s' % str(e))
+            pass
 
         ad_dict = {
             'title': title,
@@ -84,16 +85,21 @@ def parse_listings(soup):
         ad_dicts.append(ad_dict)
     return ad_dicts
 
+def build_url(unit):
+    base_url = 'http://www.kijiji.ca/' + UNIT_TYPE[unit]
+    base_url += '-apartments-condos/city-of-toronto/c212l1700273r'
+    base_url +=
+        str(settings.SEARCH_DISTANCE) + '?ad=offering&price=' + \
+        str(settings.MIN_PRICE) + '__' + str(settings.MAX_PRICE) + \
+        '&minNumberOfImages=1&address=M5J+1E6&ll=43.645101,-79.381576&furnished=0'
+
+    return
+
 def find_listings():
     listings_dicts = []
 
     for unit in ['all','house']:
-        main_url = 'http://www.kijiji.ca/' + unit_type[unit] + \
-            '-apartments-condos/city-of-toronto/c212l1700273r' +  \
-            str(settings.SEARCH_DISTANCE) + '?ad=offering&price=' + \
-            str(settings.MIN_PRICE) + '__' + str(settings.MAX_PRICE) + \
-            '&minNumberOfImages=1&address=M5J+1E6&ll=43.645101,-79.381576&furnished=0'
-
+        main_url = build_url()
         soup = get_soup(main_url)
         ads = parse_listings(soup)
         listings_dicts += ads

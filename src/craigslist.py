@@ -1,3 +1,4 @@
+## standard library imports
 import logging
 try:
     from Queue import Queue  # PY2
@@ -8,16 +9,20 @@ try:
     from urlparse import urljoin  # PY2
 except ImportError:
     from urllib.parse import urljoin  # PY3
-
-from bs4 import BeautifulSoup
 import requests
 from requests.exceptions import RequestException
 from six import iteritems
 from six.moves import range
-from .sites import get_all_sites
-from .data_scraping_utils import Browser
 import time
 import re
+
+## third party library imports
+from bs4 import BeautifulSoup
+
+## local library imports
+from .sites import get_all_sites
+from .data_scraping_utils import Browser
+
 
 ALL_SITES = get_all_sites()  # All the Craiglist sites
 RESULTS_PER_REQUEST = 100  # Craigslist returns 100 results per request

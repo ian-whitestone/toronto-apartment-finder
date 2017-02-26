@@ -1,5 +1,10 @@
-from bs4 import BeautifulSoup
+## standard library imports
 import requests
+
+## third party library imports
+from bs4 import BeautifulSoup
+
+
 
 sites_url = 'http://www.craigslist.org/about/sites'
 

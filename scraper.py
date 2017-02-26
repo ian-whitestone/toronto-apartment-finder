@@ -1,15 +1,22 @@
+## standard library imports
+import time
+import re
+from dateutil.parser import parse
+
+## third party library imports
+import slacker
+from slackclient import SlackClient
+
+## local library imports
 from src.craigslist import CraigslistHousing
 import src.kijiji as kijiji
-from src.util import post_listing_to_slack, find_points_of_interest, post_favourite, match_neighbourhood
+from src.util import post_listing_to_slack, find_points_of_interest, match_neighbourhood
+from src.util import post_favourite
 import src.settings as settings
-from database_operations import ClListing, KjListing, create_sqlite_session
+from database_operations import ClListing, KjListing, create_sqlite_session, Favourites
 from src.data_scraping_utils import get_coords
 
-from dateutil.parser import parse
-from slackclient import SlackClient
-import time
-import slacker
-import re
+
 
 session = create_sqlite_session()
 
@@ -198,46 +205,57 @@ def do_scrape():
     return
 
 
-def get_posted_favourites(bot,channel_dict):
-    channel_id = channel_dict['favourites']
-    response = bot.channels.history(channel_id)
-
-    posted_ids = []
-    for message in response.body['messages']:
-        try:
-            if '.html' in message['text']:
-                posted_ids.append(message['text'].split('.html')[0].split('apa/')[1])
-            else:
-                posted_ids.append(message['text'].split('/')[-1])
-        except:
-            pass
-
-    return posted_ids
+def get_posted_favourites():
+    favourites = session.query(Favourites).all()
+    links = [fav.link for fav in favourites]
+    return links
 
 
 def post_favourites():
     bot = slacker.Slacker(settings.SLACK_TOKEN)
     channels_response = bot.channels.list()
-    channel_dict = {chan['name']:chan['id'] for chan in channels_response.body['channels']}
-    posted_ids = get_posted_favourites(bot,channel_dict)
+    channel_dict = {chan['name']:chan['id']
+        for chan in channels_response.body['channels']}
+    posted_favourites = get_posted_favourites()
 
-    for channel in ['kijiji', 'craigslist']:
+    channels = list(set([c for key,c in settings.SLACK_CHANNELS.items()]))
+
+    # Create a slack client.
+    sc = SlackClient(settings.SLACK_TOKEN)
+
+    for channel in channels:
         channel_id = channel_dict[channel]
         response = bot.channels.history(channel_id)
 
         for message in response.body['messages']:
-            try:
-                if channel == 'craigslist':
-                    ad_id = message['text'].split('.html')[0].split('apa/')[1]
-                elif channel == 'kijiji':
-                    ad_id = message['text'].split('/')[-1]
-            except:
+            if 'attachments' not in message.keys():
                 continue
 
-            reactions = message.get('reactions',None)
+            attachment = message['attachments'][0]
+            title = attachment['title']
+            link = attachment['title_link']
+            desc = attachment['fallback']
+
+            reactions = message.get('reactions', None)
             if reactions:
                 for reaction in reactions:
-                    if reaction['name'] == '+1' and reaction['count'] > 1 and ad_id not in posted_ids:
-                        post_favourite(bot,message['text'])
-                        continue
+                    if reaction['name'] == '+1' and reaction['count'] > 1 \
+                        and link not in posted_favourites:
+                        post_and_hist_favourite(sc, title, link, desc)
+                        break
+    return
+
+def post_and_hist_favourite(sc, title, link, desc):
+    post = [{
+        "fallback": 'N/A',
+        'color': settings.DEFAULT_COLOUR,
+        "text": desc
+    }]
+    post_favourite(sc, post)
+    listing = Favourites(
+        link=link,
+        title=title
+        )
+    session.add(listing)
+    session.commit()
     return

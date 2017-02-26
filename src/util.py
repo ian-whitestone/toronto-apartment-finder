@@ -1,10 +1,12 @@
-try:
-    import settings
-except:
-    import src.settings as settings
-
+## standard library imports
 import math
+
+## third party library imports
 import slacker
+
+## local library imports
+import src.settings as settings
+
 
 def coord_distance(lat1, lon1, lat2, lon2):
     """
@@ -87,7 +89,39 @@ def build_attachment(listing, site):
 
     return attachments
 
+
+
 def get_attachment_fields(listing, site):
+    attachments = []
+    post_fields = settings.SLACK_PARAMS[site]
+
+    colours = {key:get_colour(key, listing)
+        for key, field_desc in post_fields.items()}
+
+    fields = [{'short': True, 'value': field_desc + str(listing.get(key,''))}
+        for key, field_desc in post_fields.items()
+        if colours[key] == settings.DEFAULT_COLOUR
+        ]
+
+    if fields:
+        payload = {
+            'fallback': 'N/A',
+            'color': settings.DEFAULT_COLOUR,
+            'fields': fields
+            }
+        attachments.append(payload)
+
+    for param in settings.PARAM_ORDER:
+        payload = {
+            'fallback': 'N/A',
+            'color': colours[param],
+            'text': post_fields[param] + str(listing.get(param,''))
+        }
+        attachments.append(payload)
+
+    return attachments
+
+def OLD_get_attachment_fields(listing, site):
     attachments = []
     post_fields = settings.SLACK_PARAMS[site]
 
@@ -141,12 +175,6 @@ def get_colour(key, listing):
         return settings.DEFAULT_COLOUR
 
     return settings.DEFAULT_COLOUR
-
-
-
-def post_favourite(bot,text):
-    bot.chat.post_message('favourites', text, username = 'pybot' , icon_emoji=':robot_face:')
-    return
 
 def find_points_of_interest(geotag):
     """
@@ -216,3 +244,12 @@ def match_neighbourhood(location):
         "metro_dist": metro_dist,
         "metro": metro
     }
+
+
+def post_favourite(sc, attachment):
+    sc.api_call(
+        "chat.postMessage", channel='favourites', attachments=attachment,
+        username=settings.SLACK_BOT, icon_emoji=':robot_face:'
+    )
+
+    return

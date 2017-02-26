@@ -1,27 +1,24 @@
 import os
 
-## Mode
-
-TESTING = True
-
+## Toggle testing to true/false for testing mode
+TESTING = False
 TESTING_CHANNEL = 'testing'
 
-##
+## Name of your slack bot
 SLACK_BOT = 'toby'
 
 ## SITES - Set to True/False if you want them scraped
 CRAIGSLIST = True
-KIJIJI = False
+KIJIJI = True
 
 ## Price Filters
-
 # The minimum rent you want to pay per month.
 MIN_PRICE = 500
 
 # The maximum rent you want to pay per month.
 MAX_PRICE = 1900
 
-#
+# Craig
 HAS_IMAGE = 1
 
 #postal code to search within
@@ -31,30 +28,26 @@ POSTAL = 'M5J1E6'
 SEARCH_DISTANCE = 5
 
 
-## Craigslist slack posting fields
+## Slack posting fields
 SLACK_PARAMS = {
     'craigslist': {
-        'post_fields': {
-            'price' : 'Price: ',
-            'metro_dist': 'Subway (km): ',
-            'area': 'Neighborhood: ',
-            'where': 'Address: ',
-            'metro': 'Nearest Subway: ',
-            'meta': 'Extra Info: '
-            },
-        'channel': 'craigslist'
+        'price' : 'Price: ',
+        'metro_dist': 'Subway (km): ',
+        'area': 'Neighborhood: ',
+        'where': 'Address: ',
+        'metro': 'Nearest Subway: ',
+        'meta': 'Extra Info: '
     },
     'kijiji': {
-        'post_fields': {
-            'price' : 'Price: ',
-            'address': 'Address: ',
-            'metro_dist': 'Subway (km): ',
-            'area': 'Neighborhood: ',
-            'metro': 'Nearest Subway: '
-            },
-        'channel': 'kijiji'
+        'price' : 'Price: ',
+        'address': 'Address: ',
+        'metro_dist': 'Subway (km): ',
+        'area': 'Neighborhood: ',
+        'metro': 'Nearest Subway: '
     }
 }
+
+
 
 COLOURS = {
     'price': {
@@ -86,9 +79,34 @@ COLOURS = {
     }
 }
 
+SLACK_CHANNELS = {
+    'st-lawrence': 'south-east',
+    'distillery': 'south-east',
+    'queen-west': 'queen-west',
+    'Queen': 'queen-west',
+    'liberty-village': 'liberty-village',
+    'Liberty': 'liberty-village',
+    'ossington': 'liberty-village',
+    'Downtown': 'downtown',
+    'financial-district': 'downtown',
+    'yonge-corridor': 'downtown',
+    'Yonge': 'downtown',
+    'King': 'downtown',
+    'mid-west': 'mid-west',
+    'bloor-west': 'mid-west',
+    'Bloor': 'mid-west',
+    'Toronto': 'mid-west',
+    'College': 'mid-west',
+    'Spadina': 'mid-west'
+}
+
 DEFAULT_COLOUR = '#524e4d'
 
+## This is the order in which the parameters will be posted
+## For ex., defaults will be posted first, followed by any fields with a 'good' rating
 COLOUR_ORDER = ['#524e4d', 'good', 'warning', 'danger']
+
+PARAM_ORDER = ['price', 'area', 'metro_dist']
 
 ## Location preferences
 
@@ -185,8 +203,8 @@ BOXES = [
 # but it also catches listings that don't have coordinates (many listings are missing this info).
 NEIGHBORHOODS = ['Yonge','Bloor','Queen','King','Toronto','Downtown','Liberty','Spadina','College']
 
-## Transit preferences
 
+## Transit preferences
 # The farthest you want to live from a transit stop.
 MAX_TRANSIT_DIST = 4 # kilometers
 
@@ -252,3 +270,30 @@ try:
     from config.private import *
 except Exception:
     pass
+
+
+# PREVIOUSLY USED WHEN YOU ONLY HAD 2 CHANNELS
+
+# SLACK_PARAMS = {
+#     'craigslist': {
+#         'post_fields': {
+#             'price' : 'Price: ',
+#             'metro_dist': 'Subway (km): ',
+#             'area': 'Neighborhood: ',
+#             'where': 'Address: ',
+#             'metro': 'Nearest Subway: ',
+#             'meta': 'Extra Info: '
+#             },
+#         'channel': 'craigslist'
+#     },
+#     'kijiji': {
+#         'post_fields': {
+#             'price' : 'Price: ',
+#             'address': 'Address: ',
+#             'metro_dist': 'Subway (km): ',
+#             'area': 'Neighborhood: ',
+#             'metro': 'Nearest Subway: '
+#             },
+#         'channel': 'kijiji'
+#     }
+# }
