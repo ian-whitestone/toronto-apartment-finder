@@ -6,7 +6,7 @@ import os
 ####################
 
 # Toggle testing to true/false for testing mode
-TESTING = False
+TESTING = True
 TESTING_CHANNEL = 'testing'
 
 
@@ -32,7 +32,7 @@ MIN_PRICE = 500
 # The maximum rent you want to pay per month.
 MAX_PRICE = 1900
 
-# Craiglist image requirement
+# Kijiji/Craiglist image requirement: 0 or 1
 HAS_IMAGE = 1
 
 #postal code to search within
@@ -169,6 +169,27 @@ AREAS = ["tor"]
 # https://sfbay.craigslist.org/search/sub finds sublets.
 # You only need the last 3 letters of the URLs.
 CRAIGSLIST_HOUSING_SECTION = 'apa'
+
+#######################
+### KIJIJI SETTINGS ###
+#######################
+
+UNIT_TYPE_MAP = {
+    'studio': 'b-bachelor-studio',
+    '1bed': 'b-1-bedroom',
+    '1bed_den': 'b-1-bedroom-den',
+    'all': 'b-apartments-condos',
+    'house': 'b-house-rental'
+    }
+
+# enter the types of units you would like to parse
+# 'all' includes studios, 1beds, 1beds + den
+# 'all' DOES NOT INCLUDE houses
+UNIT_TYPES = ['all', 'house']
+
+# 0 if you want un-furnished units, 1 for furnished units
+FURNISHED = 0
+
 
 
 ############################
