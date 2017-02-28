@@ -168,7 +168,7 @@ def scrape_kijiji():
 
             results.append(result)
         except:
-            print ('errored on ' % result)
+            log.exception('errored on ' % result)
     return results
 
 
@@ -187,7 +187,7 @@ def do_scrape():
             all_results += scrape_area(area)
             pass
 
-        print("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
+        log.info("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
 
         # Post each result to slack.
         for result in all_results:
@@ -197,7 +197,7 @@ def do_scrape():
         # Get all the results from kijiji.
         all_results = scrape_kijiji()
 
-        print("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
+        log.info("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
 
         for result in all_results:
             post_listing_to_slack(sc, result, 'kijiji')
