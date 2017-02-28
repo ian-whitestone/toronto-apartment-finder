@@ -26,6 +26,16 @@ Use regexes to determine if the unit is furnished or a studio/bachelor apartment
 ### Kijiji
 Built a web scraper to pull relevant listings from Kijiji and post to a separate kijiji channel.
 
+### Craiglist
+Modified the craiglist package to scrape multiple pages (not just the first page).
+It also uses selenium + chromedriver to retrieve the image urls, since they are added using Javascript.
+
+### Formatted Slack Posts
+writeup to come
+
+### Additional Channels
+writeup to come
+
 ### Other Minor Changes
 * Only skip listings if they are missing *both* neighborhood & geotag information. The original repo dropped listings that were missing neighborhood information, which I felt was unnecessary due to the presence of the lat/lon coordinates in the geotag
 
