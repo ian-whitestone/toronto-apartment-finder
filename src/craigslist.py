@@ -192,7 +192,7 @@ class CraigslistBase(object):
             self.filters['s'] = start
 
             soup = get_soup(self.url, self.filters)
-            
+
             if not total:
                 totalcount = soup.find('span', {'class': 'totalcount'})
                 total = int(totalcount.text) if totalcount else 0
@@ -275,8 +275,8 @@ class CraigslistBase(object):
 
         if result['has_map']:
             response = requests_get(result['url'])
-            log.info('GET %s', response.url)
-            log.info('Response code: %s', response.status_code)
+            log.debug('GET %s', response.url)
+            log.debug('Response code: %s', response.status_code)
 
             if response.ok:
                 soup = BeautifulSoup(response.content, 'html.parser')
