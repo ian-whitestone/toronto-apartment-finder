@@ -1,5 +1,6 @@
 ## standard library imports
 import math
+import logging as log
 
 ## third party library imports
 import slacker
@@ -54,7 +55,7 @@ def post_listing_to_slack(sc, listing, site):
     else:
         attachment = {"fallback": desc, 'color': settings.DEFAULT_COLOUR,
             'text': desc}
-            
+
     sc.api_call(
         "chat.postMessage", channel=channel, attachments=attachment,
         username=settings.SLACK_BOT, icon_emoji=':robot_face:'
@@ -249,12 +250,3 @@ def match_neighbourhood(location):
         "metro_dist": metro_dist,
         "metro": metro
     }
-
-
-def post_favourite(sc, attachment):
-    sc.api_call(
-        "chat.postMessage", channel='favourites', attachments=attachment,
-        username=settings.SLACK_BOT, icon_emoji=':robot_face:'
-    )
-
-    return

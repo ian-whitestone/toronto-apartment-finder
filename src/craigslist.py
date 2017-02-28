@@ -2,16 +2,10 @@
 ## https://github.com/juliomalegria/python-craigslist
 
 ## standard library imports
-import logging
-try:
-    from Queue import Queue  # PY2
-except ImportError:
-    from queue import Queue  # PY3
+import logging as log
+from queue import Queue  # PY3
 from threading import Thread
-try:
-    from urlparse import urljoin  # PY2
-except ImportError:
-    from urllib.parse import urljoin  # PY3
+from urllib.parse import urljoin  # PY3
 import requests
 from requests.exceptions import RequestException
 from six import iteritems
@@ -23,8 +17,8 @@ import re
 from bs4 import BeautifulSoup
 
 ## local library imports
-from .craigslist_sites import get_all_sites
-from .data_scraping_utils import Browser
+from .CraigslistSites import get_all_sites
+from .Browser import Browser
 
 
 ALL_SITES = get_all_sites()  # All the Craiglist sites
@@ -37,12 +31,10 @@ def requests_get(*args, **kwargs):
     a timeout).
     """
 
-    logger = kwargs.pop('logger', None)
     try:
         return requests.get(*args, **kwargs)
     except RequestException as exc:
-        if logger:
-            logger.warning('Request failed (%s). Retrying ...', exc)
+        log.warning('Request failed (%s). Retrying ...', exc)
         return requests.get(*args, **kwargs)
 
 def get_soup(base_url, filters):
@@ -57,7 +49,7 @@ def get_soup(base_url, filters):
 
     browser = Browser()
     ## scrape first page
-    print ('scraping %s' % url)
+    log.info('scraping %s' % url)
     html += browser.scrape_url(url) ##append page sources to each other
 
     page_url = url
@@ -65,10 +57,10 @@ def get_soup(base_url, filters):
         s = page_start_ints[i]
         page_url = page_url.replace('&s=' + page_start_ints[i-1],'&s=' + s)
         page_url = page_url.replace('?s=' + page_start_ints[i-1],'?s=' + s)
-        print ('scraping %s' % page_url)
+        log.info('scraping %s' % page_url)
         html += browser.scrape_url(page_url) ##append page sources to each other
 
-    print ('finished scraping')
+    log.info('finished scraping')
     browser.driver.quit()
     soup = BeautifulSoup(html, 'html.parser')
     return soup
@@ -114,21 +106,18 @@ class CraigslistBase(object):
         'price_desc': 'pricedsc',
     }
 
-    def __init__(self, site=None, area=None, category=None, filters=None,
-                 log_level=logging.WARNING):
-        # Logging
-        self.set_logger(log_level, init=True)
+    def __init__(self, site=None, area=None, category=None, filters=None):
 
         self.site = site or self.default_site
         if self.site not in ALL_SITES:
             msg = "'%s' is not a valid site" % self.site
-            self.logger.error(msg)
+            log.error(msg)
             raise ValueError(msg)
 
         if area:
             if not self.is_valid_area(area):
                 msg = "'%s' is not a valid area for site '%s'" % (area, site)
-                self.logger.error(msg)
+                log.error(msg)
                 raise ValueError(msg)
         self.area = area
 
@@ -157,7 +146,7 @@ class CraigslistBase(object):
                         try:
                             options.append(valid_options.index(opt) + 1)
                         except ValueError:
-                            self.logger.warning(
+                            log.warning(
                                 "'%s' is not a valid option for %s"
                                 % (opt, key)
                             )
@@ -165,20 +154,11 @@ class CraigslistBase(object):
                 elif value:  # Don't add filter if ...=False
                     self.filters[filter['url_key']] = filter['value']
             except KeyError:
-                self.logger.warning("'%s' is not a valid filter", key)
-
-    def set_logger(self, log_level, init=False):
-        if init:
-            self.logger = logging.getLogger('python-craiglist')
-            self.handler = logging.StreamHandler()
-            self.logger.addHandler(self.handler)
-        self.logger.setLevel(log_level)
-        self.handler.setLevel(log_level)
+                log.warning("'%s' is not a valid filter", key)
 
     def is_valid_area(self, area):
         base_url = self.url_templates['base']
-        response = requests_get(base_url % {'site': self.site},
-                                logger=self.logger)
+        response = requests_get(base_url % {'site': self.site})
         soup = BeautifulSoup(response.content, 'html.parser')
         sublinks = soup.find('ul', {'class': 'sublinks'})
         return sublinks and sublinks.find('a', text=area) is not None
@@ -197,7 +177,7 @@ class CraigslistBase(object):
             except KeyError:
                 msg = ("'%s' is not a valid sort_by option, "
                        "use: 'newest', 'price_asc' or 'price_desc'" % sort_by)
-                self.logger.error(msg)
+                log.error(msg)
                 raise ValueError(msg)
 
         start = 0
@@ -206,13 +186,6 @@ class CraigslistBase(object):
 
         while True:
             self.filters['s'] = start
-
-            # response = requests_get(self.url, params=self.filters,
-            #                         logger=self.logger)
-            # self.logger.info('GET %s', response.url)
-            # self.logger.info('Response code: %s', response.status_code)
-            # response.raise_for_status()  # Something failed?
-            # soup = BeautifulSoup(response.content, 'html.parser')
 
             soup = get_soup(self.url, self.filters)
 
@@ -226,7 +199,7 @@ class CraigslistBase(object):
             for row,listing in zip(rows,listings):
                 if limit is not None and total_so_far >= limit:
                     break
-                self.logger.debug('Processing %s of %s results ...',
+                self.log.debug('Processing %s of %s results ...',
                                   total_so_far + 1, total)
 
                 link = row.find('a', {'class': 'hdrlnk'})
@@ -293,12 +266,12 @@ class CraigslistBase(object):
     def geotag_result(self, result):
         """ Adds (lat, lng) to result. """
 
-        self.logger.debug('Geotagging result ...')
+        log.debug('Geotagging result ...')
 
         if result['has_map']:
-            response = requests_get(result['url'], logger=self.logger)
-            self.logger.info('GET %s', response.url)
-            self.logger.info('Response code: %s', response.status_code)
+            response = requests_get(result['url'])
+            log.info('GET %s', response.url)
+            log.info('Response code: %s', response.status_code)
 
             if response.ok:
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -323,7 +296,7 @@ class CraigslistBase(object):
 
         def geotagger():
             while not queue.empty():
-                self.logger.debug('%s results left to geotag ...',
+                log.debug('%s results left to geotag ...',
                                   queue.qsize())
                 self.geotag_result(queue.get())
                 queue.task_done()
@@ -340,20 +313,20 @@ class CraigslistBase(object):
 
     @classmethod
     def show_filters(cls):
-        print('Base filters:')
+        log.info('Base filters:')
         for key, options in iteritems(cls.base_filters):
             value_as_str = '...' if options['value'] is None else 'True/False'
-            print('* %s = %s' % (key, value_as_str))
-        print('Section specific filters:')
+            log.info('* %s = %s' % (key, value_as_str))
+        log.info('Section specific filters:')
         for key, options in iteritems(cls.extra_filters):
             value_as_str = '...' if options['value'] is None else 'True/False'
-            print('* %s = %s' % (key, value_as_str))
+            log.info('* %s = %s' % (key, value_as_str))
         url = cls.url_templates['no_area'] % {'site': cls.default_site,
                                               'category': cls.default_category}
         list_filters = get_list_filters(url)
         for key, options in iteritems(list_filters):
             value_as_str = ', '.join([repr(opt) for opt in options['value']])
-            print('* %s = %s' % (key, value_as_str))
+            log.info('* %s = %s' % (key, value_as_str))
 
 
 class CraigslistCommunity(CraigslistBase):

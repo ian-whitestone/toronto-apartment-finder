@@ -1,5 +1,6 @@
 ## standard library imports
 import requests
+import logging as log
 
 ## third party library imports
 from bs4 import BeautifulSoup

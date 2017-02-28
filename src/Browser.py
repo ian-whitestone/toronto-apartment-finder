@@ -1,5 +1,6 @@
 ## standard library imports
 import time
+import logging as log
 
 ## third party library imports
 from selenium import webdriver

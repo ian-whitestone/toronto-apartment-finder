@@ -1,27 +1,17 @@
-try:
-    import settings
-except:
-    import src.settings as settings
-
-
-##scraping modules
-from bs4 import BeautifulSoup
+## standard library imports
 import urllib.request
 import urllib.parse
 import urllib.error
-
-##other modules
+import logging as log
 import math
 import re
 
+## third party library imports
+from bs4 import BeautifulSoup
 
-UNIT_TYPE = {
-    'studio': 'b-bachelor-studio',
-    '1bed': 'b-1-bedroom',
-    '1bed_den': 'b-1-bedroom-den',
-    'all': 'b-apartments-condos',
-    'house': 'b-house-rental'
-    }
+## local library imports
+import src.settings as settings
+
 
 def get_soup(url):
     # print (url)
@@ -86,20 +76,25 @@ def parse_listings(soup):
     return ad_dicts
 
 def build_url(unit):
-    base_url = 'http://www.kijiji.ca/' + UNIT_TYPE[unit]
+    base_url = 'http://www.kijiji.ca/' + settings.UNIT_TYPE_MAP[unit]
 
-    # users must enter the constant manually based on there entered postal code
-    base_url += '-apartments-condos/city-of-toronto/c212l1700273r'
-    base_url += str(settings.SEARCH_DISTANCE) + '?ad=offering&price=' + \
-        str(settings.MIN_PRICE) + '__' + str(settings.MAX_PRICE) + \
-        '&minNumberOfImages=1&address=M5J+1E6&ll=43.645101,-79.381576&furnished=0'
+    # users must enter the postal code and associated constant & lat/lon
+    # coordinates manually
+    # TODO automate that part somehow (not sure about the first constant)
 
-    return
+    url = (base_url + '-apartments-condos/city-of-toronto/c212l1700273r'
+        + str(settings.SEARCH_DISTANCE) + '?ad=offering&price='
+        + str(settings.MIN_PRICE) + '__' + str(settings.MAX_PRICE)
+        + '&minNumberOfImages=' + str(settings.HAS_IMAGE)
+        + '&address=M5J+1E6&ll=43.645101,-79.381576&'
+        + 'furnished=' + str(settings.FURNISHED))
+
+    return url
 
 def find_listings():
     listings_dicts = []
 
-    for unit in ['all','house']:
+    for unit in settings.UNIT_TYPES:
         main_url = build_url()
         soup = get_soup(main_url)
         ads = parse_listings(soup)

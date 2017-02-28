@@ -1,5 +1,6 @@
 ## standard library imports
 import requests
+import logging as log
 
 ## local library imports
 import src.settings as settings
