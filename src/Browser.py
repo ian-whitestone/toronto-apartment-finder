@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 
 class Browser():
     def __init__(self,):
+        log.info('initializing chrome driver')
         self.driver = webdriver.Chrome()
 
     def scrape_url(self, url):

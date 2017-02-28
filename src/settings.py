@@ -1,12 +1,13 @@
 import os
 
+LOG_PATH = 'logs'
 
 ####################
 ### TESTING MODE ###
 ####################
 
 # Toggle testing to true/false for testing mode
-TESTING = True
+TESTING = False
 TESTING_CHANNEL = 'testing'
 
 

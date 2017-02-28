@@ -95,7 +95,7 @@ def find_listings():
     listings_dicts = []
 
     for unit in settings.UNIT_TYPES:
-        main_url = build_url()
+        main_url = build_url(unit)
         soup = get_soup(main_url)
         ads = parse_listings(soup)
         listings_dicts += ads

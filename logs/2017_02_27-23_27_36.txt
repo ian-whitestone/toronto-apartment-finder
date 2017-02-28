@@ -1,0 +1,87 @@
+2017-02-27 23:27:36,206  - main - INFO - Mon Feb 27 23:27:36 2017: Checking for favourites
+2017-02-27 23:27:36,206  - main - INFO - ###############################################################
+2017-02-27 23:27:36,206  - main - INFO - ###############################################################
+2017-02-27 23:27:36,206  - main - INFO - ##################### CHECKING FOR FAVOURITES #################
+2017-02-27 23:27:36,206  - main - INFO - ###############################################################
+2017-02-27 23:27:36,206  - main - INFO - ###############################################################
+2017-02-27 23:27:37,634  - Favourites - INFO - finished checking for favourites
+2017-02-27 23:27:37,634  - main - INFO - ###############################################################
+2017-02-27 23:27:37,634  - main - INFO - ###############################################################
+2017-02-27 23:27:37,634  - main - INFO - ##################### STARTING SCRAPING #######################
+2017-02-27 23:27:37,635  - main - INFO - ###############################################################
+2017-02-27 23:27:37,635  - main - INFO - ###############################################################
+2017-02-27 23:27:37,635  - Scraper - INFO - scraping Craigslist area tor
+2017-02-27 23:27:37,635  - Scraper - INFO - getting Craigslist generator
+2017-02-27 23:27:39,609  - Craigslist - INFO - Retrieving craigslist results
+2017-02-27 23:27:39,609  - Craigslist - INFO - getting craigslist soup
+2017-02-27 23:27:39,609  - Browser - INFO - initializing chrome driver
+2017-02-27 23:27:41,404  - Craigslist - INFO - scraping http://toronto.craigslist.org/search/tor/apa?postal=M5J1E6&search_distance=5&hasPic=1&s=0&max_price=1900&min_price=500&sort=date
+2017-02-27 23:27:55,952  - Craigslist - INFO - scraping http://toronto.craigslist.org/search/tor/apa?postal=M5J1E6&search_distance=5&hasPic=1&s=100&max_price=1900&min_price=500&sort=date
+2017-02-27 23:28:09,554  - Craigslist - INFO - scraping http://toronto.craigslist.org/search/tor/apa?postal=M5J1E6&search_distance=5&hasPic=1&s=200&max_price=1900&min_price=500&sort=date
+2017-02-27 23:28:23,054  - Craigslist - INFO - finished scraping
+2017-02-27 23:28:25,882  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/5987938263.html
+2017-02-27 23:28:25,882  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:26,922  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/5989121200.html
+2017-02-27 23:28:26,922  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:27,488  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6013917196.html
+2017-02-27 23:28:27,488  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:28,069  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6013922857.html
+2017-02-27 23:28:28,069  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:28,632  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022837081.html
+2017-02-27 23:28:28,632  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:29,209  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6010074267.html
+2017-02-27 23:28:29,209  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:29,818  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022802048.html
+2017-02-27 23:28:29,818  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:30,405  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022801685.html
+2017-02-27 23:28:30,405  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:30,992  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6005337845.html
+2017-02-27 23:28:30,993  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:31,601  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6005126598.html
+2017-02-27 23:28:31,602  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:32,174  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6010192669.html
+2017-02-27 23:28:32,174  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:32,779  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6010274990.html
+2017-02-27 23:28:32,779  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:33,347  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6010391769.html
+2017-02-27 23:28:33,347  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:33,928  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6019216424.html
+2017-02-27 23:28:33,928  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:34,545  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6019275067.html
+2017-02-27 23:28:34,545  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:35,103  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6019528970.html
+2017-02-27 23:28:35,103  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:35,704  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6019580818.html
+2017-02-27 23:28:35,704  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:36,324  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022801325.html
+2017-02-27 23:28:36,324  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:36,886  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022803075.html
+2017-02-27 23:28:36,887  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:37,478  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022797776.html
+2017-02-27 23:28:37,479  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:38,024  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6003349931.html
+2017-02-27 23:28:38,024  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:39,450  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022765951.html
+2017-02-27 23:28:39,450  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:40,066  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022765595.html
+2017-02-27 23:28:40,067  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:40,620  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6015906476.html
+2017-02-27 23:28:40,621  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:41,163  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6018849579.html
+2017-02-27 23:28:41,163  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:41,734  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022714703.html
+2017-02-27 23:28:41,735  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:42,306  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022686426.html
+2017-02-27 23:28:42,307  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:42,874  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/5994376150.html
+2017-02-27 23:28:42,874  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:43,477  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/5997106515.html
+2017-02-27 23:28:43,477  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:44,041  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022733102.html
+2017-02-27 23:28:44,041  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:44,619  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022732556.html
+2017-02-27 23:28:44,619  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:45,178  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022729738.html
+2017-02-27 23:28:45,178  - Craigslist - INFO - Response code: 200
+2017-02-27 23:28:45,747  - Craigslist - INFO - GET https://toronto.craigslist.ca/tor/apa/6022705312.html
+2017-02-27 23:28:45,747  - Craigslist - INFO - Response code: 200

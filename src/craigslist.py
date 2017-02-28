@@ -19,6 +19,7 @@ from bs4 import BeautifulSoup
 ## local library imports
 from .CraigslistSites import get_all_sites
 from .Browser import Browser
+import src.settings as settings
 
 
 ALL_SITES = get_all_sites()  # All the Craiglist sites
@@ -38,6 +39,7 @@ def requests_get(*args, **kwargs):
         return requests.get(*args, **kwargs)
 
 def get_soup(base_url, filters):
+    log.info('getting craigslist soup')
     url = base_url + '?'
 
     for filter,value in filters.items():
@@ -45,6 +47,7 @@ def get_soup(base_url, filters):
 
     url = url[:-1]
     html = ''
+
     page_start_ints = ['0', '100', '200']
 
     browser = Browser()
@@ -52,13 +55,14 @@ def get_soup(base_url, filters):
     log.info('scraping %s' % url)
     html += browser.scrape_url(url) ##append page sources to each other
 
-    page_url = url
-    for i in range(1,len(page_start_ints)):
-        s = page_start_ints[i]
-        page_url = page_url.replace('&s=' + page_start_ints[i-1],'&s=' + s)
-        page_url = page_url.replace('?s=' + page_start_ints[i-1],'?s=' + s)
-        log.info('scraping %s' % page_url)
-        html += browser.scrape_url(page_url) ##append page sources to each other
+    if settings.TESTING == False:
+        page_url = url
+        for i in range(1,len(page_start_ints)):
+            s = page_start_ints[i]
+            page_url = page_url.replace('&s=' + page_start_ints[i-1],'&s=' + s)
+            page_url = page_url.replace('?s=' + page_start_ints[i-1],'?s=' + s)
+            log.info('scraping %s' % page_url)
+            html += browser.scrape_url(page_url) ##append page sources to each other
 
     log.info('finished scraping')
     browser.driver.quit()
@@ -170,7 +174,7 @@ class CraigslistBase(object):
         If geotagged=True, the results will include the (lat, lng) in the
         'geotag' attrib (this will make the process a little bit longer).
         """
-
+        log.info('Retrieving craigslist results')
         if sort_by:
             try:
                 self.filters['sort'] = self.sort_by_options[sort_by]
@@ -188,7 +192,7 @@ class CraigslistBase(object):
             self.filters['s'] = start
 
             soup = get_soup(self.url, self.filters)
-
+            
             if not total:
                 totalcount = soup.find('span', {'class': 'totalcount'})
                 total = int(totalcount.text) if totalcount else 0
@@ -199,7 +203,7 @@ class CraigslistBase(object):
             for row,listing in zip(rows,listings):
                 if limit is not None and total_so_far >= limit:
                     break
-                self.log.debug('Processing %s of %s results ...',
+                log.debug('Processing %s of %s results ...',
                                   total_so_far + 1, total)
 
                 link = row.find('a', {'class': 'hdrlnk'})
@@ -249,6 +253,7 @@ class CraigslistBase(object):
 
                 if geotagged and result['has_map']:
                     self.geotag_result(result)
+
 
                 yield result
                 total_so_far += 1

@@ -7,6 +7,7 @@ from slackclient import SlackClient
 
 ## local library imports
 import src.settings as settings
+from src.DatabaseOperations import create_sqlite_session, Favourites
 
 session = create_sqlite_session()
 
@@ -48,6 +49,8 @@ def post_favourites():
                         and link not in posted_favourites:
                         post_and_hist_favourite(sc, title, link, desc)
                         break
+
+    log.info('finished checking for favourites')
     return
 
 def post_and_hist_favourite(sc, title, link, desc):
@@ -58,14 +61,16 @@ def post_and_hist_favourite(sc, title, link, desc):
             "text": desc
         }
     ]
-
     post_favourite(sc, post)
+    
+    log.info('historizing listing %s to favourites' % title)
     listing = Favourites(link=link, title=title)
     session.add(listing)
     session.commit()
     return
 
 def post_favourite(sc, attachment):
+    log.info('posting listing %s to favourites' % title)
     sc.api_call(
         "chat.postMessage", channel='favourites', attachments=attachment,
         username=settings.SLACK_BOT, icon_emoji=':robot_face:'
