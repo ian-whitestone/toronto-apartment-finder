@@ -1,24 +1,38 @@
 import os
 
-## Toggle testing to true/false for testing mode
+
+####################
+### TESTING MODE ###
+####################
+
+# Toggle testing to true/false for testing mode
 TESTING = False
 TESTING_CHANNEL = 'testing'
 
-## Name of your slack bot
-SLACK_BOT = 'toby'
 
-## SITES - Set to True/False if you want them scraped
+#########################
+### FEATURES TOGGLING ###
+#########################
+
+# SITES - Set to True/False if you want them scraped
 CRAIGSLIST = True
 KIJIJI = True
 
-## Price Filters
+# True if you would like posts with the image preview, and other parameters
+# False if you would prefer simple posts with default description & url
+ENHANCED_POSTS = True
+
+######################
+### SEARCH FILTERS ###
+######################
+
 # The minimum rent you want to pay per month.
 MIN_PRICE = 500
 
 # The maximum rent you want to pay per month.
 MAX_PRICE = 1900
 
-# Craig
+# Craiglist image requirement
 HAS_IMAGE = 1
 
 #postal code to search within
@@ -28,7 +42,16 @@ POSTAL = 'M5J1E6'
 SEARCH_DISTANCE = 5
 
 
-## Slack posting fields
+
+#######################
+### SLACK CONSTANTS ###
+#######################
+
+# Name of your slack bot
+SLACK_BOT = 'toby'
+
+# For each site, map the key name from the scraping result to the description
+# you would like to appear in the slack post
 SLACK_PARAMS = {
     'craigslist': {
         'price' : 'Price: ',
@@ -48,7 +71,12 @@ SLACK_PARAMS = {
 }
 
 
-
+# enter the parameters you would like to have colour coded
+# there are two types of colour coding methodologies
+# 1) "range" will check if the parameter value falls within specified range
+# 2) "list" will check if the parameter value falls within a specified list
+# 3 standard colours - good is green, warning is yellow, danger is red.
+# feel free to swap those out with any hex colour code
 COLOURS = {
     'price': {
         'levels': {
@@ -68,8 +96,8 @@ COLOURS = {
     },
     'area': {
         'levels': {
-            'good': ['st-lawrence', 'queen-west', 'liberty-village', 'ossington',
-                'Queen', 'King', 'Liberty'],
+            'good': ['st-lawrence', 'queen-west', 'liberty-village',
+                'ossington', 'Queen', 'King', 'Liberty'],
             'warning': ['distillery','financial-district', 'mid-west',
                 'Spadina', 'College', 'Downtown'],
             'danger': ['yonge-corridor','bloor-west', 'Yonge',
@@ -78,6 +106,14 @@ COLOURS = {
         'type': "list"
     }
 }
+
+# for the parameters which will be colour coded as defined in COLOURS,
+# enter the order you would like them displayed in so the messages are
+# consistently formatted
+COLOUR_PARAM_ORDER = ['price', 'area', 'metro_dist']
+
+
+# map each neighborhood to the slack channel you would like it posted in
 
 SLACK_CHANNELS = {
     'st-lawrence': 'south-east',
@@ -100,15 +136,22 @@ SLACK_CHANNELS = {
     'Spadina': 'mid-west'
 }
 
+# default channel for listings to be posted to
+DEFAULT_CHANNEL = 'mid-west'
+
+# default colour for slack messages
 DEFAULT_COLOUR = '#524e4d'
 
-## This is the order in which the parameters will be posted
-## For ex., defaults will be posted first, followed by any fields with a 'good' rating
-COLOUR_ORDER = ['#524e4d', 'good', 'warning', 'danger']
+# This is the order in which the parameters will be posted
+# For ex., defaults will be posted first, followed by any fields with a 'good' rating
+COLOUR_ORDER = [DEFAULT_COLOUR, 'good', 'warning', 'danger']
 
-PARAM_ORDER = ['price', 'area', 'metro_dist']
 
-## Location preferences
+
+
+###########################
+### CRAIGSLIST SETTINGS ###
+###########################
 
 # The Craigslist site you want to search on.
 # For instance, https://sfbay.craigslist.org is SF and the Bay Area.
@@ -119,6 +162,18 @@ CRAIGSLIST_SITE = 'toronto'
 # For instance, https://sfbay.craigslist.org/eby/ is the East Bay, and https://sfbay.craigslist.org/sfc/ is San Francisco.
 # You only need the last three letters of the URLs.
 AREAS = ["tor"]
+
+
+# The Craigslist section underneath housing that you want to search in.
+# For instance, https://sfbay.craigslist.org/search/apa find apartments for rent.
+# https://sfbay.craigslist.org/search/sub finds sublets.
+# You only need the last 3 letters of the URLs.
+CRAIGSLIST_HOUSING_SECTION = 'apa'
+
+
+############################
+### LOCATION PREFERENCES ###
+############################
 
 # A list of neighborhoods and coordinates that you want to look for apartments in.  Any listing that has coordinates
 # attached will be checked to see which area it is in.  If there's a match, it will be annotated with the area
@@ -233,20 +288,7 @@ TRANSIT_STATIONS = {
     'dufferin': [43.6582514, -79.4377267]
 }
 
-## Search type preferences
 
-# The Craigslist section underneath housing that you want to search in.
-# For instance, https://sfbay.craigslist.org/search/apa find apartments for rent.
-# https://sfbay.craigslist.org/search/sub finds sublets.
-# You only need the last 3 letters of the URLs.
-CRAIGSLIST_HOUSING_SECTION = 'apa'
-
-## System settings
-
-# How long we should sleep between scrapes of Craigslist.
-# Too fast may get rate limited.
-# Too slow may miss listings.
-SLEEP_INTERVAL = 1 * 60 # 20 minutes
 
 
 # The token that allows us to connect to slack.
@@ -270,30 +312,3 @@ try:
     from config.private import *
 except Exception:
     pass
-
-
-# PREVIOUSLY USED WHEN YOU ONLY HAD 2 CHANNELS
-
-# SLACK_PARAMS = {
-#     'craigslist': {
-#         'post_fields': {
-#             'price' : 'Price: ',
-#             'metro_dist': 'Subway (km): ',
-#             'area': 'Neighborhood: ',
-#             'where': 'Address: ',
-#             'metro': 'Nearest Subway: ',
-#             'meta': 'Extra Info: '
-#             },
-#         'channel': 'craigslist'
-#     },
-#     'kijiji': {
-#         'post_fields': {
-#             'price' : 'Price: ',
-#             'address': 'Address: ',
-#             'metro_dist': 'Subway (km): ',
-#             'area': 'Neighborhood: ',
-#             'metro': 'Nearest Subway: '
-#             },
-#         'channel': 'kijiji'
-#     }
-# }

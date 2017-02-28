@@ -46,10 +46,15 @@ def post_listing_to_slack(sc, listing, site):
     if settings.TESTING:
         channel = settings.TESTING_CHANNEL
     else:
-        channel = settings.SLACK_CHANNELS.get(listing['area'],'mid-west')
+        channel = settings.SLACK_CHANNELS.get(listing['area'],
+            settings.DEFAULT_CHANNEL)
 
-    attachment = build_attachment(listing, site)
-
+    if settings.ENHANCED_POSTS:
+        attachment = build_attachment(listing, site)
+    else:
+        attachment = {"fallback": desc, 'color': settings.DEFAULT_COLOUR,
+            'text': desc}
+            
     sc.api_call(
         "chat.postMessage", channel=channel, attachments=attachment,
         username=settings.SLACK_BOT, icon_emoji=':robot_face:'
@@ -111,7 +116,7 @@ def get_attachment_fields(listing, site):
             }
         attachments.append(payload)
 
-    for param in settings.PARAM_ORDER:
+    for param in settings.COLOUR_PARAM_ORDER:
         payload = {
             'fallback': 'N/A',
             'color': colours[param],

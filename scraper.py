@@ -8,13 +8,13 @@ import slacker
 from slackclient import SlackClient
 
 ## local library imports
-from src.craigslist import CraigslistHousing
-import src.kijiji as kijiji
-from src.util import post_listing_to_slack, find_points_of_interest, match_neighbourhood
-from src.util import post_favourite
+from src.Craigslist import CraigslistHousing
+import src.Kijiji as kijiji
+from src.GeneralUtils import post_listing_to_slack, find_points_of_interest, match_neighbourhood
+from src.GeneralUtils import post_favourite
 import src.settings as settings
-from database_operations import ClListing, KjListing, create_sqlite_session, Favourites
-from src.data_scraping_utils import get_coords
+from DatabaseOperations import ClListing, KjListing, create_sqlite_session, Favourites
+from src.Google import get_coords
 
 
 

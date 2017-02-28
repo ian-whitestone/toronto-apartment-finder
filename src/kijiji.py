@@ -28,7 +28,7 @@ def get_soup(url):
     req = urllib.request.Request(url)
     response = urllib.request.urlopen(req)
     shtml = response.read()
-    soup = BeautifulSoup(shtml,"html.parser")
+    soup = BeautifulSoup(shtml, "html.parser")
     return soup
 
 def parse_address(ad_table):
@@ -87,9 +87,10 @@ def parse_listings(soup):
 
 def build_url(unit):
     base_url = 'http://www.kijiji.ca/' + UNIT_TYPE[unit]
+
+    # users must enter the constant manually based on there entered postal code
     base_url += '-apartments-condos/city-of-toronto/c212l1700273r'
-    base_url +=
-        str(settings.SEARCH_DISTANCE) + '?ad=offering&price=' + \
+    base_url += str(settings.SEARCH_DISTANCE) + '?ad=offering&price=' + \
         str(settings.MIN_PRICE) + '__' + str(settings.MAX_PRICE) + \
         '&minNumberOfImages=1&address=M5J+1E6&ll=43.645101,-79.381576&furnished=0'
 

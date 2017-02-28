@@ -1,3 +1,6 @@
+## ORIGINAL CODE WRITTEN BY
+## https://github.com/juliomalegria/python-craigslist
+
 ## standard library imports
 import logging
 try:
@@ -20,7 +23,7 @@ import re
 from bs4 import BeautifulSoup
 
 ## local library imports
-from .sites import get_all_sites
+from .craigslist_sites import get_all_sites
 from .data_scraping_utils import Browser
 
 
