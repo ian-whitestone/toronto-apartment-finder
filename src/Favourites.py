@@ -51,20 +51,19 @@ def post_favourites():
     return
 
 def post_and_hist_favourite(sc, title, link, desc):
-    post = [{
-        "fallback": 'N/A',
-        'color': settings.DEFAULT_COLOUR,
-        "text": desc
-    }]
+    post = [
+        {
+            "fallback": 'N/A',
+            'color': settings.DEFAULT_COLOUR,
+            "text": desc
+        }
+    ]
+
     post_favourite(sc, post)
-    listing = Favourites(
-        link=link,
-        title=title
-        )
+    listing = Favourites(link=link, title=title)
     session.add(listing)
     session.commit()
     return
-
 
 def post_favourite(sc, attachment):
     sc.api_call(
