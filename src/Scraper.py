@@ -10,7 +10,7 @@ from slackclient import SlackClient
 
 ## local library imports
 from src.Craigslist import CraigslistHousing
-import src.Kijiji as kijiji
+from src.Kijiji import Kijiji
 from src.GeneralUtils import post_listing_to_slack, find_points_of_interest, match_neighbourhood
 import src.settings as settings
 from src.DatabaseOperations import ClListing, KjListing, create_sqlite_session
@@ -145,6 +145,7 @@ def checkTitle(name):
 
 
 def scrapeKijiji():
+    kijiji = Kijiji()
     base_results = kijiji.find_listings()
 
     results = []

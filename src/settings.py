@@ -1,6 +1,5 @@
 import os
 
-LOG_PATH = 'logs'
 
 ####################
 ### TESTING MODE ###
@@ -16,7 +15,7 @@ TESTING_CHANNEL = 'testing'
 #########################
 
 # SITES - Set to True/False if you want them scraped
-CRAIGSLIST = True
+CRAIGSLIST = False
 KIJIJI = True
 
 # True if you would like posts with the image preview, and other parameters
@@ -36,7 +35,7 @@ MAX_PRICE = 1900
 # Kijiji/Craiglist image requirement: 0 or 1
 HAS_IMAGE = 1
 
-#postal code to search within
+#Kijiji/postal code to search within
 POSTAL = 'M5J1E6'
 
 #distance
@@ -177,10 +176,11 @@ CRAIGSLIST_HOUSING_SECTION = 'apa'
 
 UNIT_TYPE_MAP = {
     'studio': 'b-bachelor-studio',
-    '1bed': 'b-1-bedroom',
-    '1bed_den': 'b-1-bedroom-den',
-    'all': 'b-apartments-condos',
-    'house': 'b-house-rental'
+    '1bed': 'b-1-bedroom-apartments-condos/city-of-toronto/c212l1700273',
+    '2bed': 'b-2-bedroom-apartments-condos/city-of-toronto/c214l1700273',
+    '1bed_den': 'b-1-bedroom-den-apartments-condos/city-of-toronto/c213l1700273',
+    'all': 'b-apartments-condos/city-of-toronto/c37l1700273',
+    'house': 'b-house-rental/city-of-toronto/c43l1700273'
     }
 
 # enter the types of units you would like to parse
@@ -190,7 +190,6 @@ UNIT_TYPES = ['all', 'house']
 
 # 0 if you want un-furnished units, 1 for furnished units
 FURNISHED = 0
-
 
 
 ############################
@@ -310,7 +309,8 @@ TRANSIT_STATIONS = {
     'dufferin': [43.6582514, -79.4377267]
 }
 
-
+# Directory in your folder where you want the log files stored
+LOG_PATH = 'logs'
 
 
 # The token that allows us to connect to slack.
