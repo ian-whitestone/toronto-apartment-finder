@@ -15,7 +15,7 @@ TESTING_CHANNEL = 'testing'
 #########################
 
 # SITES - Set to True/False if you want them scraped
-CRAIGSLIST = False
+CRAIGSLIST = True
 KIJIJI = True
 
 # True if you would like posts with the image preview, and other parameters
