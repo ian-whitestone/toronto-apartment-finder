@@ -50,8 +50,7 @@ if __name__ == "__main__":
         log.info("Exiting....")
         sys.exit(1)
     except Exception as exc:
-        log.exception("Error with the scraping:", sys.exc_info()[0])
-        traceback.print_exc()
+        log.exception("Error with the scraping:" % str(exc))
 
 
 ## TODO

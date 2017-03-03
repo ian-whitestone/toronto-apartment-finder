@@ -182,7 +182,8 @@ def scrapeKijiji():
                     ## len(result["metro"]) == 0 or ## old subway dist filter
                     ## if it's not within X km of subway or in specified area, pass
                     continue
-
+            else:
+                result['area'] = ''
             results.append(result)
         except:
             log.exception('errored on ' % result)

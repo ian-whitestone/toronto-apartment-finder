@@ -45,7 +45,8 @@ def post_favourites():
             reactions = message.get('reactions', None)
             if reactions:
                 for reaction in reactions:
-                    if reaction['name'] == '+1' and reaction['count'] > 1 \
+                    if reaction['name'] == '+1' \
+                        and reaction['count'] >= settings.MIN_THUMBS_UP \
                         and link not in posted_favourites:
                         post_and_hist_favourite(sc, title, link, desc)
                         break
@@ -61,15 +62,15 @@ def post_and_hist_favourite(sc, title, link, desc):
             "text": desc
         }
     ]
-    post_favourite(sc, post)
-    
+    post_favourite(sc, post, title)
+
     log.info('historizing listing %s to favourites' % title)
     listing = Favourites(link=link, title=title)
     session.add(listing)
     session.commit()
     return
 
-def post_favourite(sc, attachment):
+def post_favourite(sc, attachment, title):
     log.info('posting listing %s to favourites' % title)
     sc.api_call(
         "chat.postMessage", channel='favourites', attachments=attachment,

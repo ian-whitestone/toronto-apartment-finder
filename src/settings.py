@@ -22,6 +22,9 @@ KIJIJI = True
 # False if you would prefer simple posts with default description & url
 ENHANCED_POSTS = True
 
+# Number of thumbs up required for favourites
+MIN_THUMBS_UP = 1
+
 ######################
 ### SEARCH FILTERS ###
 ######################
