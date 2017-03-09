@@ -34,7 +34,9 @@ if __name__ == "__main__":
     log.info('##################### CHECKING FOR FAVOURITES #################')
     log.info('###############################################################')
     log.info('###############################################################')
-    post_favourites()
+
+    if settings.TESTING == False:
+        post_favourites()
 
 
     log.info('###############################################################')
@@ -50,7 +52,7 @@ if __name__ == "__main__":
         log.info("Exiting....")
         sys.exit(1)
     except Exception as exc:
-        log.exception("Error with the scraping:" % str(exc))
+        log.exception("Error with the scraping: %s" % str(exc))
 
 
 ## TODO

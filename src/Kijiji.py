@@ -27,6 +27,7 @@ class Kijiji():
             self.postal_lon += '0'
 
     def get_soup(self, url):
+        log.info("Scraping %s" % url)
         # print (url)
         req = urllib.request.Request(url)
         response = urllib.request.urlopen(req)

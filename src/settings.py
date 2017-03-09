@@ -44,7 +44,16 @@ POSTAL = 'M5J1E6'
 #distance
 SEARCH_DISTANCE = 5
 
+#time of the day you leave for work
+HOUR_DEPART = 8
+MINUTE_DEPART = 0
 
+## how do you get to work?
+## accepts: driving, walking, bicycling, transit
+TRAVEL_MODE = 'transit'
+
+# WORK_ADDRESS = "5140+Yonge+St+North+York+ON+M2N+6X7"
+WORK_ADDRESS = "43.7683866,-79.4155314" ##lookup in google
 
 #######################
 ### SLACK CONSTANTS ###
@@ -327,9 +336,9 @@ except ImportError:
     try:
         from src.private import *
     except:
-        pass
+        print ('no private.py module')
 except Exception:
-    pass
+    print ('no private.py module')
 
 
 # Any external private settings are imported from here.
