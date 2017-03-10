@@ -51,9 +51,10 @@ MINUTE_DEPART = 0
 ## how do you get to work?
 ## accepts: driving, walking, bicycling, transit
 TRAVEL_MODE = 'transit'
+WORK_ADDRESS = "5140+Yonge+St+North+York+ON+M2N+6X7"
 
-# WORK_ADDRESS = "5140+Yonge+St+North+York+ON+M2N+6X7"
-WORK_ADDRESS = "43.7683866,-79.4155314" ##lookup in google
+## longest work commute time your willing to endure!
+MAX_COMMUTE_TIME = 90
 
 #######################
 ### SLACK CONSTANTS ###

@@ -22,13 +22,13 @@ def get_coords(address):
     return None, None
 
 
-def get_transit_time(from_address):
+def get_travel_time(from_address):
     """
     ------
     params
         from_address <string> : "43.6683396,-79.3856119"
     """
-    transit_time = None
+    commute_time = None
     try:
         log.info('Getting transit time from %s' % from_address)
         t = datetime.datetime.today()
@@ -47,12 +47,12 @@ def get_transit_time(from_address):
             d = r.json()
             if d['routes']:
                 duration = d['routes'][0]['legs'][0]['duration']
-                transit_time = duration['value']/60
+                commute_time = duration['value']/60
             else:
                 log.warning('No route could be found for address %s' % from_address)
-        return transit_time
+        return commute_time
 
     except Exception as err:
         log.exception("Error getting transit time for %s Error: %s" %
             (from_address, str(err)))
-        return transit_time
+        return commute_time

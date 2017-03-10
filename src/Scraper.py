@@ -14,9 +14,10 @@ from src.Kijiji import Kijiji
 from src.GeneralUtils import post_listing_to_slack, find_points_of_interest, match_neighbourhood
 import src.settings as settings
 from src.DatabaseOperations import ClListing, KjListing, create_sqlite_session
-from src.Google import get_coords
+from src.Google import get_coords, get_travel_time
 
 
+# TODO: whole module needs refactoring....repetitive functions etc.
 
 session = create_sqlite_session()
 def getCraigslistGen(area):
@@ -37,6 +38,8 @@ def getCraigslistGen(area):
     return gen
 
 def checkResult(result):
+    """ Check the craigslist listing for various tests.
+    """
     listing = session.query(ClListing).filter_by(id=result["id"]).first()
     result_check = True
     # Don't store the listing if it already exists.
@@ -48,6 +51,7 @@ def checkResult(result):
         result_check = False
 
     return result_check
+
 def getGeoInfo(result):
     if result["geotag"]:
         # Assign the coordinates.
@@ -82,11 +86,14 @@ def scrapeCraigslist(area):
             log.exception('An exception occured %s' % str(err))
             continue
 
+        result = getGeoInfo(result)
         if checkResult(result) == False:
             continue
 
-        result = getGeoInfo(result)
 
+        commute = True
+        if result['lat'] != 0 and result['lon'] != 0:
+            commute = check_commute_time(result['lat'], result['lon'])
         # Try parsing the price.
         try:
             result['price'] = float(result["price"].replace("$", ""))
@@ -96,15 +103,17 @@ def scrapeCraigslist(area):
 
         histCLListing(result)
 
-        # Return the result if it has images and it is in an area we defined.
+        # Return the result if it has images, is less than our max commute time
+        # and it is in an area we defined.
         # can modify the second condition so it check if it's in the area
         # OR within MAX_TRANSIT_DIST
-        if result['has_image'] and len(result["area"]) > 0 \
+        if result['has_image'] and commute and len(result["area"]) > 0 \
             and checkTitle(result['title']):
             results.append(result)
 
     return results
 
+## MOVE THESE TO DBO ??
 def histCLListing(result):
     # Create the listing object.
     listing = ClListing(
@@ -118,6 +127,22 @@ def histCLListing(result):
         id=result["id"],
         area=result["area"],
         metro_stop=result["metro"]
+    )
+
+    # Save the listing so we don't grab it again.
+    if not settings.TESTING:
+        session.add(listing)
+        session.commit()
+    return
+
+def histKjListing(result):
+    # Create the listing object.
+    listing = KjListing(
+        id = result['id'],
+        link = result['url'],
+        price = result['price'],
+        title = result['title'],
+        address = result['address']
     )
 
     # Save the listing so we don't grab it again.
@@ -143,6 +168,14 @@ def checkTitle(name):
     else:
         return True
 
+def check_commute_time(lat, lon):
+    commute = True
+    from_address = str(lat) + ',' + str(lon)
+    commute_time = get_travel_time(from_address)
+    if commute_time: ## if the get_travel_time fails, return True
+        if commute_time > settings.MAX_COMMUTE_TIME:
+            commute = False
+    return commute
 
 def scrapeKijiji():
     kijiji = Kijiji()
@@ -157,19 +190,7 @@ def scrapeKijiji():
             if listing and not settings.TESTING:
                 continue
 
-            # Create the listing object.
-            listing = KjListing(
-                id = result['id'],
-                link = result['url'],
-                price = result['price'],
-                title = result['title'],
-                address = result['address']
-            )
-
-            # Save the listing so we don't grab it again.
-            if not settings.TESTING:
-                session.add(listing)
-                session.commit()
+            histKjListing(result)
 
             lat, lon = get_coords(result['address'])
             if lat and lon:
@@ -177,8 +198,11 @@ def scrapeKijiji():
                 geo_data = find_points_of_interest([lat,lon])
                 result.update(geo_data)
 
+                commute = check_commute_time(lat, lon)
+
                 ## only scrub listings that we actually verified were out of range
-                if len(result["area"]) == 0 or checkTitle(result['title']) == False:
+                if len(result["area"]) == 0 or checkTitle(result['title']) == False \
+                    or commute == False:
                     ## len(result["metro"]) == 0 or ## old subway dist filter
                     ## if it's not within X km of subway or in specified area, pass
                     continue

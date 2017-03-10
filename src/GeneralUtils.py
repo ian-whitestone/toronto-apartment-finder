@@ -237,11 +237,12 @@ def match_neighbourhood(location):
     metro_dist = "N/A"
     metro = ""
 
-    # If the listing isn't in any of the boxes we defined, check to see if the string description of the neighborhood
-    # matches anything in our list of neighborhoods.
-    for hood in settings.NEIGHBORHOODS:
-        if hood.lower() in location.lower():
-            area = hood
+    if location:
+        # If the listing isn't in any of the boxes we defined, check to see if the string description of the neighborhood
+        # matches anything in our list of neighborhoods.
+        for hood in settings.NEIGHBORHOODS:
+            if hood.lower() in location.lower():
+                area = hood
 
     return {
         "area_found": area_found,
