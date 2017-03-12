@@ -1,7 +1,7 @@
 
 # Toronto Apartment Finder
 <p align="center">
-  <img src=images/robot.png alt="robot" style="width: 600px;" style="height: 200px;"/>
+  <img src=images/robot.png alt="robot" />
 </p>
 
 This repo contains the code for a bot that will scrape Craigslist & Kijiji for real-time listings matching specific criteria, then alert you in Slack. This will let you quickly see the best new listings, and contact the owners. You can adjust the settings to change your price range, what neighborhoods you want to look in, and what transit stations and other points of interest you'd like to be close to.
@@ -51,7 +51,7 @@ BOXES = [
 
 ```
 ### Distance to Subway Station
-p align="center">
+<p align="center">
   <img src=images/metro_dist.png alt="metro_dist" style="width: 600px;" style="height: 200px;"/>
 </p>
 
@@ -70,27 +70,74 @@ TRANSIT_STATIONS = {
     "queen": [43.652307, -79.379208],
     "college": [43.6613247, -79.3852633],
     "dundas": [43.6552859, -79.3797379],
-    "st_patrick": [43.6548307,-79.3883485],
-    "queens_park": [43.6548307,-79.3883485],
-    "museum": [43.6548307,-79.3883485],
-    "spadina": [43.6548307,-79.3883485],
-    "st_george": [43.6609472,-79.3983049],
-    "wellesley": [43.6654823,-79.3805532],
-    "bloor_yonge": [43.6654823,-79.3805532],
-    "bay": [43.6634052, -79.3968713],
-    'dupont': [43.6670063, -79.4074714],
-    'bathurst': [43.6620984,-79.4015388],
-    'christie': [43.6620984,-79.4015388],
-    'ossington': [43.6554853,-79.427803],
-    'dufferin': [43.6554853,-79.427803]
+    "st_patrick": [43.6548307,-79.3905372],
+    "queens_park": [43.6598804,-79.3926655],
+    "museum": [43.6671223,-79.3956618],
+    "spadina": [43.6673568,-79.4059985],
+    "st_george": [43.6682622,-79.402047],
+    "wellesley": [43.6654593,-79.3860771],
+    "bloor_yonge": [43.6709058,-79.3878259],
+    "bay": [43.6701472,-79.3928834],
+    'dupont': [43.6748551,-79.4092697],
+    'bathurst': [43.6666064,-79.4110757],
+    'christie': [43.6641199,-79.4205082],
+    'ossington': [43.662437,-79.4283647],
+    'dufferin': [43.6601077,-79.437617]
 }
-
 
 ```
 ### Commute Time to Work
 
+```python
+#time of the day you leave for work
+HOUR_DEPART = 8
+MINUTE_DEPART = 0
+
+## how do you get to work?
+## accepts: driving, walking, bicycling, transit
+TRAVEL_MODE = 'transit'
+WORK_ADDRESS = "5140+Yonge+St+North+York+ON+M2N+6X7"
+
+## longest work commute time your willing to endure!
+MAX_COMMUTE_TIME = 90
+```
+
 ### Enhanced Slack Posts
 
+```python
+# True if you would like posts with the image preview, and other parameters
+# False if you would prefer simple posts with default description & url
+ENHANCED_POSTS = True
+
+# enter the parameters you would like to have colour coded
+# there are two types of colour coding methodologies
+# 1) "range" will check if the parameter value falls within specified range
+# 2) "list" will check if the parameter value falls within a specified list
+# 3 standard colours - good is green, warning is yellow, danger is red.
+# feel free to swap those out with any hex colour code
+COLOURS = {
+    'price': {
+        'levels': {
+            'good': [0, 1500],
+            'warning': [1501, 1700],
+            'danger': [1701, 10000]
+        },
+        'type': "range"
+    },
+    'area': {
+        'levels': {
+            'good': ['st-lawrence', 'queen-west', 'liberty-village',
+                'ossington', 'Queen', 'King', 'Liberty'],
+            'warning': ['distillery','financial-district', 'mid-west',
+                'Spadina', 'College', 'Downtown'],
+            'danger': ['yonge-corridor','bloor-west', 'Yonge',
+                'Bloor', 'Toronto']
+        },
+        'type': "list"
+    }
+}
+
+```
 ### Keywords
 Use regexes to determine if the unit is furnished or a studio/bachelor apartment rather than relying on Kijiji/Craigslist filters.
 
