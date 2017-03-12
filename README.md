@@ -1,7 +1,7 @@
 
 # Toronto Apartment Finder
 <p align="center">
-  <img src=images/robot.png alt="robot" />
+  <img src=images/robot.png alt="robot" style="width: 150px;" style="height: 150px;"/>
 </p>
 
 This repo contains the code for a bot that will scrape Craigslist & Kijiji for real-time listings matching specific criteria, then alert you in Slack. This will let you quickly see the best new listings, and contact the owners. You can adjust the settings to change your price range, what neighborhoods you want to look in, and what transit stations and other points of interest you'd like to be close to.
