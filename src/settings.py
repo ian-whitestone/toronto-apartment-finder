@@ -72,14 +72,16 @@ SLACK_PARAMS = {
         'area': 'Neighborhood: ',
         'where': 'Address: ',
         'metro': 'Nearest Subway: ',
-        'meta': 'Extra Info: '
+        'meta': 'Extra Info: ',
+        'commute': 'Commute Time (min): '
     },
     'kijiji': {
         'price' : 'Price: ',
         'address': 'Address: ',
         'metro_dist': 'Subway (km): ',
         'area': 'Neighborhood: ',
-        'metro': 'Nearest Subway: '
+        'metro': 'Nearest Subway: ',
+        'commute': 'Commute Time (min): '
     }
 }
 
@@ -95,7 +97,7 @@ COLOURS = {
         'levels': {
             'good': [0, 1500],
             'warning': [1501, 1700],
-            'danger': [1701,10000]
+            'danger': [1701, 10000]
         },
         'type': "range"
     },
@@ -103,7 +105,15 @@ COLOURS = {
         'levels': {
             'good': [0, 0.75],
             'warning': [0.76, 1.5],
-            'danger': [1.51,10]
+            'danger': [1.51, 10]
+        },
+        'type': "range"
+    },
+    'commute': {
+        'levels': {
+            'good': [0, 40],
+            'warning': [41, 60],
+            'danger': [61, 10000]
         },
         'type': "range"
     },
@@ -123,7 +133,7 @@ COLOURS = {
 # for the parameters which will be colour coded as defined in COLOURS,
 # enter the order you would like them displayed in so the messages are
 # consistently formatted
-COLOUR_PARAM_ORDER = ['price', 'area', 'metro_dist']
+COLOUR_PARAM_ORDER = ['price', 'area', 'metro_dist', 'commute']
 
 
 # map each neighborhood to the slack channel you would like it posted in

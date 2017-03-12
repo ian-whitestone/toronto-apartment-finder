@@ -127,27 +127,6 @@ def get_attachment_fields(listing, site):
 
     return attachments
 
-def OLD_get_attachment_fields(listing, site):
-    attachments = []
-    post_fields = settings.SLACK_PARAMS[site]
-
-    colours = {key:get_colour(key, listing)
-        for key, field_desc in post_fields.items()}
-
-    for colour in settings.COLOUR_ORDER:
-        fields = [{'short': True, 'value': field_desc + str(listing.get(key,''))}
-            for key, field_desc in post_fields.items() if colours[key] == colour]
-
-        if fields:
-            payload = {
-                'fallback': 'N/A',
-                'color': colour,
-                'fields': fields
-            }
-            attachments.append(payload)
-
-    return attachments
-
 def get_colour(key, listing):
     """Score feature with a colour based on preferred ranges
     params
@@ -178,6 +157,8 @@ def get_colour(key, listing):
 
             return settings.DEFAULT_COLOUR
     except:
+        log.exception('Error getting colour for key: %s listing: %s' %
+            (key, listing))
         return settings.DEFAULT_COLOUR
 
     return settings.DEFAULT_COLOUR
@@ -251,3 +232,24 @@ def match_neighbourhood(location):
         "metro_dist": metro_dist,
         "metro": metro
     }
+
+def OLD_get_attachment_fields(listing, site):
+    attachments = []
+    post_fields = settings.SLACK_PARAMS[site]
+
+    colours = {key:get_colour(key, listing)
+        for key, field_desc in post_fields.items()}
+
+    for colour in settings.COLOUR_ORDER:
+        fields = [{'short': True, 'value': field_desc + str(listing.get(key,''))}
+            for key, field_desc in post_fields.items() if colours[key] == colour]
+
+        if fields:
+            payload = {
+                'fallback': 'N/A',
+                'color': colour,
+                'fields': fields
+            }
+            attachments.append(payload)
+
+    return attachments

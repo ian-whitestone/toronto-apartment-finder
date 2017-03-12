@@ -92,8 +92,10 @@ def scrapeCraigslist(area):
 
 
         commute = True
+        commute_time = settings.MAX_COMMUTE_TIME
         if result['lat'] != 0 and result['lon'] != 0:
-            commute = check_commute_time(result['lat'], result['lon'])
+            commute, commute_time = check_commute_time(result['lat'],
+                                        result['lon'])
         # Try parsing the price.
         try:
             result['price'] = float(result["price"].replace("$", ""))
@@ -101,6 +103,7 @@ def scrapeCraigslist(area):
             log.exception('Error parsing price for result: %s Error: %s'
                 % (result,str(err)))
 
+        result['commute'] = commute_time
         histCLListing(result)
 
         # Return the result if it has images, is less than our max commute time
@@ -170,12 +173,13 @@ def checkTitle(name):
 
 def check_commute_time(lat, lon):
     commute = True
+    commute_time = settings.MAX_COMMUTE_TIME
     from_address = str(lat) + ',' + str(lon)
     commute_time = get_travel_time(from_address)
     if commute_time: ## if the get_travel_time fails, return True
         if commute_time > settings.MAX_COMMUTE_TIME:
             commute = False
-    return commute
+    return commute, commute_time
 
 def scrapeKijiji():
     kijiji = Kijiji()
@@ -198,8 +202,8 @@ def scrapeKijiji():
                 geo_data = find_points_of_interest([lat,lon])
                 result.update(geo_data)
 
-                commute = check_commute_time(lat, lon)
-
+                commute, commute_time = check_commute_time(lat, lon)
+                result['commute'] = commute_time
                 ## only scrub listings that we actually verified were out of range
                 if len(result["area"]) == 0 or checkTitle(result['title']) == False \
                     or commute == False:
@@ -208,6 +212,7 @@ def scrapeKijiji():
                     continue
             else:
                 result['area'] = ''
+                result['commute'] = settings.MAX_COMMUTE_TIME
             results.append(result)
         except:
             log.exception('errored on ' % result)

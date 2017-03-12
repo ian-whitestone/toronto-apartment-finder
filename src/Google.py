@@ -47,7 +47,7 @@ def get_travel_time(from_address):
             d = r.json()
             if d['routes']:
                 duration = d['routes'][0]['legs'][0]['duration']
-                commute_time = duration['value']/60
+                commute_time = round(duration['value']/60,1)
             else:
                 log.warning('No route could be found for address %s' % from_address)
         return commute_time
