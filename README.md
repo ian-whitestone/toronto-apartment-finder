@@ -29,6 +29,8 @@ Each listing is then passed through various filters, including a check to see if
   <img src=images/hoods.png alt="hoods" style="width: 600px;" style="height: 200px;"/>
 </p>
 
+The neighborhood feature allows you to draw boxes around custom areas of the city that you would want to live in. In the `src/settings.py` file users can create their custom hoods as shown below. Only listings that fall within these areas will be returned.
+
 ```python
 BOXES = [
     ("distillery", [
@@ -55,10 +57,14 @@ BOXES = [
   <img src=images/metro_dist.png alt="metro_dist" style="width: 600px;" style="height: 200px;"/>
 </p>
 
+The distance to subway feature calculates the distance to the nearest subway station, and sees if that distance is less than the max amount specified in the settings file. The scrub can be used in conjunction with or as an alternative to the hood feature.
+
+Users must define the subway stations and their coordinates, which can easily be looked up on Google Maps.
+
 ```python
 ## Transit preferences
 # The farthest you want to live from a transit stop.
-MAX_TRANSIT_DIST = 4 # kilometers
+MAX_TRANSIT_DIST = 2 # kilometers
 
 # Transit stations you want to check against.  Every coordinate here will be checked against each listing,
 # and the closest station name will be added to the result and posted into Slack.
@@ -88,10 +94,16 @@ TRANSIT_STATIONS = {
 ```
 ### Commute Time to Work
 
+Similar to the distance to subway feature, this option gets the travel time to your office.
+
+Users must pass in the time they leave for work, their mode of transportation (i.e. public transit, driving, walking, biking), their work address, and the maximum commute time they are willing to have.
+
+Listings that take longer than the specified `MAX_COMMUTE_TIME` are not posted in Slack.
+
 ```python
 #time of the day you leave for work
-HOUR_DEPART = 8
-MINUTE_DEPART = 0
+HOUR_DEPART = 8 ## 0-23
+MINUTE_DEPART = 0 ## 0-59
 
 ## how do you get to work?
 ## accepts: driving, walking, bicycling, transit
@@ -102,7 +114,24 @@ WORK_ADDRESS = "5140+Yonge+St+North+York+ON+M2N+6X7"
 MAX_COMMUTE_TIME = 90
 ```
 
-### Enhanced Slack Posts
+### Enhanced Posts
+<p align="center">
+  <img src=images/product_snapshot.png alt="product_snapshot" style="width: 600px;" style="height: 200px;"/>
+</p>
+
+I decided to take advantage of Slack's awesome API to create posts with more detail that will give users a better snapshot of the listing.
+
+Enhanced posts include an image preview of the listing. They also include additional information like:
+
+* price
+* neighborhood
+* address
+* the nearest subway station & distance to that subway station
+* commute time to work
+
+For several of these parameters, I colour code them as green, yellow or red based on their favourability. This configuration is completely custom and is specified in the settings file.
+
+For example, with price, anything below $1500 will be green, up to $1700 will be yellow, and above $1700 will be red.
 
 ```python
 # True if you would like posts with the image preview, and other parameters
@@ -138,10 +167,44 @@ COLOURS = {
 }
 
 ```
+
+The enhanced posts also render nicely in the Slack mobile app.
+
+<p align="center">
+  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" style="width: 600px;" style="height: 200px;"/>
+</p>
+
+### Favourites Tracking
+
+<p align="center">
+  <img src=images/favourites_arrow.png alt="favourites_arrow" style="width: 600px;" style="height: 200px;"/>
+</p>
+
+Since my girlfriend and I will both be looking at the listings, I created a favourites channel.
+
+In the `src/settings.py` file I created a `MIN_THUMBS_UP` variable. Currently, if either of us gives the listing a "thumbs-up" reaction, it will be posted in the favourites channel so we can follow up with the lister to schedule a viewing.
+
+```python
+# Number of thumbs up required for favourites
+MIN_THUMBS_UP = 1
+```
+
 ### Keywords
 Use regexes to determine if the unit is furnished or a studio/bachelor apartment rather than relying on Kijiji/Craigslist filters.
 
 For future work, the full listing description can be pulled in and parsed for relevant information.
+
+## Installation
+
+This package was written with Python 3.5. I have not tested the compatibility with anything below 3.5.
+
+To install the necessary packages, run `pip install -r requirements.txt`.
+
+You will also need to download (chromedriver)[https://sites.google.com/a/chromium.org/chromedriver/] in order to use selenium for scraping Craigslist.
+
+The chromedriver executable will also need to be in your PATH environment variable. I added mine in my `~/Documents/Python` folder.
+
+You can add it to your path by adding `export PATH="/Users/whitesi/Documents/Programming/Python:$PATH"` to your `~/.bash_proifle` or `~/.bashrc`.
 
 ## TODO
 
@@ -154,3 +217,8 @@ For future work, the full listing description can be pulled in and parsed for re
 - [ ] Build a recommender based on liked listings
 - [ ] Refactoring
 - [ ] Add docstrings
+- [ ] Deploy on AWS
+
+## Questions or Suggestions?
+
+Feel free to log an issue for any questions, suggestions or bugs you come across!

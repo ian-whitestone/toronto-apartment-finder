@@ -2,3 +2,4 @@ sqlalchemy
 python-dateutil
 slackclient
 slacker
+selenium
