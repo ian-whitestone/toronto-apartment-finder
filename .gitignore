@@ -12,8 +12,6 @@ presentation/
 # Slack bot token
 private.py
 
-# logs folder
-logs/
 
 # Distribution / packaging
 .Python
