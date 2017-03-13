@@ -171,13 +171,13 @@ COLOURS = {
 The enhanced posts also render nicely in the Slack mobile app.
 
 <p align="center">
-  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" style="width: 600px;" style="height: 200px;"/>
+  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" style="width: 100px;" style="height: 400px;"/>
 </p>
 
 ### Favourites Tracking
 
 <p align="center">
-  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" style="width: 100px;" style="height: 400px;"/>
+  <img src=images/favourites_arrow.png alt="favourites_arrow" style="width: 600px;" style="height: 200px;"/>
 </p>
 
 Since my girlfriend and I will both be looking at the listings, I created a favourites channel.
