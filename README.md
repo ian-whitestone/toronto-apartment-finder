@@ -177,7 +177,7 @@ The enhanced posts also render nicely in the Slack mobile app.
 ### Favourites Tracking
 
 <p align="center">
-  <img src=images/favourites_arrow.png alt="favourites_arrow" style="width: 600px;" style="height: 200px;"/>
+  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" style="width: 100px;" style="height: 400px;"/>
 </p>
 
 Since my girlfriend and I will both be looking at the listings, I created a favourites channel.
@@ -200,11 +200,11 @@ This package was written with Python 3.5. I have not tested the compatibility wi
 
 To install the necessary packages, run `pip install -r requirements.txt`.
 
-You will also need to download (chromedriver)[https://sites.google.com/a/chromium.org/chromedriver/] in order to use selenium for scraping Craigslist.
+You will also need to download [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) in order to use selenium for scraping Craigslist.
 
-The chromedriver executable will also need to be in your PATH environment variable. I added mine in my `~/Documents/Python` folder.
+The chromedriver executable will also need to be in your PATH environment variable. I added mine in my `~/Documents/Programming/Python` folder.
 
-You can add it to your path by adding `export PATH="/Users/whitesi/Documents/Programming/Python:$PATH"` to your `~/.bash_proifle` or `~/.bashrc`.
+You can add it to your path by adding `export PATH="/Users/whitesi/Documents/Programming/Python:$PATH"` to your `~/.bash_profile` or `~/.bashrc`.
 
 ## TODO
 
