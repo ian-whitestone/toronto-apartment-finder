@@ -171,8 +171,8 @@ COLOURS = {
 The enhanced posts also render nicely in the Slack mobile app.
 
 <p align="center">
-  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" style="width: 100px;" style="height: 400px;"/>
-</p>
+  <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" width="400" height="680"/>
+</p
 
 ### Favourites Tracking
 
