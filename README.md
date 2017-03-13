@@ -194,7 +194,7 @@ Use regexes to determine if the unit is furnished or a studio/bachelor apartment
 
 For future work, the full listing description can be pulled in and parsed for relevant information.
 
-## Installation
+## Setup
 
 This package was written with Python 3.5. I have not tested the compatibility with anything below 3.5.
 
@@ -205,6 +205,14 @@ You will also need to download [chromedriver](https://sites.google.com/a/chromiu
 The chromedriver executable will also need to be in your PATH environment variable. I added mine in my `~/Documents/Programming/Python` folder.
 
 You can add it to your path by adding `export PATH="/Users/whitesi/Documents/Programming/Python:$PATH"` to your `~/.bash_profile` or `~/.bashrc`.
+
+You also need to get Slack, Google Maps and Google Directions API tokens and place them in a `src/private.py` file:
+
+```python
+SLACK_TOKEN = 'XXXXXXX'
+GOOGLE_LOCATION_TOKEN = 'XXXXXXX'
+GOOGLE_DIRECTIONS_TOKEN = 'XXXXXXX'
+```
 
 ## TODO
 
