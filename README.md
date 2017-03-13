@@ -8,7 +8,7 @@ This repo contains the code for a bot that will scrape Craigslist & Kijiji for r
 
 The tool is ideal for people who are looking to find a rental with more than 1 person, since the same listings can be conveniently viewed by all people in Slack, and favourited listings can be tracked.
 
-The project was inspired by the work of [Vik Paruchuri](https://github.com/VikParuchuri/apartment-finder). Please visit his repo for setup instructions and the original work.
+The project was inspired and based off the work of [Vik Paruchuri](https://github.com/VikParuchuri/apartment-finder). Please visit his repo for the original work.
 
 
 ## Overview
@@ -172,7 +172,7 @@ The enhanced posts also render nicely in the Slack mobile app.
 
 <p align="center">
   <img src=images/product_snapshot_mobile.png alt="product_snapshot_mobile" width="400" height="680"/>
-</p
+</p>
 
 ### Favourites Tracking
 
@@ -206,11 +206,11 @@ The chromedriver executable will also need to be in your PATH environment variab
 
 You can add it to your path by adding `export PATH="/Users/whitesi/Documents/Programming/Python:$PATH"` to your `~/.bash_profile` or `~/.bashrc`.
 
-You also need to get Slack, Google Maps and Google Directions API tokens and place them in a `src/private.py` file:
+You also need to get Slack, Google Geocoding and Google Directions API tokens and place them in a `src/private.py` file:
 
 ```python
 SLACK_TOKEN = 'XXXXXXX'
-GOOGLE_LOCATION_TOKEN = 'XXXXXXX'
+GOOGLE_LOCATION_TOKEN = 'XXXXXXX'  # (Google Geocoding API)
 GOOGLE_DIRECTIONS_TOKEN = 'XXXXXXX'
 ```
 
@@ -226,6 +226,7 @@ GOOGLE_DIRECTIONS_TOKEN = 'XXXXXXX'
 - [ ] Refactoring
 - [ ] Add docstrings
 - [ ] Deploy on AWS
+- [ ] Turn this into a website (long term)
 
 ## Questions or Suggestions?
 
