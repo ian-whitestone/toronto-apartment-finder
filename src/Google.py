@@ -2,6 +2,7 @@
 import requests
 import logging as log
 import datetime
+from pprint import pprint
 
 ## local library imports
 import src.settings as settings
@@ -37,10 +38,17 @@ def get_travel_time(from_address):
         epoch = (tomorrow - datetime.datetime(1970,1,1)).total_seconds()
         epoch_str = str(epoch).replace('.0', '')
 
-        url = ("https://maps.googleapis.com/maps/api/directions/json?origin="
-            "{0}&destination={1}&departure_time={2}&mode={3}"
-            "&key={4}").format(from_address, settings.WORK_ADDRESS, epoch_str,
-                settings.TRAVEL_MODE, settings.GOOGLE_DIRECTIONS_TOKEN)
+        if settings.TRAVEL_MODE == 'transit':
+            url = ("https://maps.googleapis.com/maps/api/directions/json?origin="
+                "{0}&destination={1}&departure_time={2}&mode={3}&transit_mode={4}"
+                "&key={5}").format(from_address, settings.WORK_ADDRESS, epoch_str,
+                    settings.TRAVEL_MODE, settings.TRANSIT_MODE,
+                    settings.GOOGLE_DIRECTIONS_TOKEN)
+        else:
+            url = ("https://maps.googleapis.com/maps/api/directions/json?origin="
+                "{0}&destination={1}&departure_time={2}&mode={3}"
+                "&key={4}").format(from_address, settings.WORK_ADDRESS, epoch_str,
+                    settings.TRAVEL_MODE, settings.GOOGLE_DIRECTIONS_TOKEN)
         r = requests.get(url)
 
         if r.status_code == 200:

@@ -33,7 +33,7 @@ MIN_THUMBS_UP = 1
 MIN_PRICE = 500
 
 # The maximum rent you want to pay per month.
-MAX_PRICE = 1900
+MAX_PRICE = 2200
 
 # Kijiji/Craiglist image requirement: 0 or 1
 HAS_IMAGE = 1
@@ -51,10 +51,11 @@ MINUTE_DEPART = 0
 ## how do you get to work?
 ## accepts: driving, walking, bicycling, transit
 TRAVEL_MODE = 'transit'
+TRANSIT_MODE = 'subway|tram|bus'
 WORK_ADDRESS = "5140+Yonge+St+North+York+ON+M2N+6X7"
 
 ## longest work commute time your willing to endure!
-MAX_COMMUTE_TIME = 90
+MAX_COMMUTE_TIME = 250
 
 #######################
 ### SLACK CONSTANTS ###

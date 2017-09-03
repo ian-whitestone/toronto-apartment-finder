@@ -88,6 +88,7 @@ def scrapeCraigslist(area):
 
         result = getGeoInfo(result)
         if checkResult(result) == False:
+            log.warning('failed checkresult ' + result['title'])
             continue
 
 
@@ -103,13 +104,15 @@ def scrapeCraigslist(area):
             log.exception('Error parsing price for result: %s Error: %s'
                 % (result,str(err)))
 
-        result['commute'] = commute_time
+
         histCLListing(result)
 
         # Return the result if it has images, is less than our max commute time
         # and it is in an area we defined.
         # can modify the second condition so it check if it's in the area
         # OR within MAX_TRANSIT_DIST
+
+
         if result['has_image'] and commute and len(result["area"]) > 0 \
             and checkTitle(result['title']):
             results.append(result)
@@ -233,11 +236,11 @@ def do_scrape():
         for area in settings.AREAS:
             log.info('scraping Craigslist area %s' % area)
             all_results += scrapeCraigslist(area)
-            pass
 
         log.info("{}: Got {} results for Craigslist".format(time.ctime(), len(all_results)))
 
         # Post each result to slack.
+        log.info('posting craigslist listings to slack')
         for result in all_results:
             post_listing_to_slack(sc, result, 'craigslist')
 
@@ -248,6 +251,7 @@ def do_scrape():
 
         log.info("{}: Got {} results from Kijiji".format(time.ctime(), len(all_results)))
 
+        log.info('posting kijiji listings to slack')
         for result in all_results:
             post_listing_to_slack(sc, result, 'kijiji')
 
